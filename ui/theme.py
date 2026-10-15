@@ -1398,6 +1398,112 @@ def apply_theme():
             overflow-x: auto;
           }
         }
+        /* ---------- Navigation (st.button based, same on every OS / version) ---------- */
+        .st-key-feature-navigation {
+          margin-bottom: 1rem;
+          padding: 0.45rem 0.55rem;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: var(--panel);
+        }
+
+        .st-key-feature-navigation [data-testid="stHorizontalBlock"] {
+          gap: 0.5rem !important;
+        }
+
+        .st-key-feature-navigation .stButton button,
+        .st-key-secondary-feature-navigation .stButton button,
+        .st-key-ai-tools-feature-navigation .stButton button {
+          min-height: 46px !important;
+          border: 1px solid transparent !important;
+          border-radius: 10px !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          color: var(--text) !important;
+          font-weight: 500 !important;
+          letter-spacing: 0 !important;
+        }
+
+        .st-key-feature-navigation .stButton button *,
+        .st-key-secondary-feature-navigation .stButton button *,
+        .st-key-ai-tools-feature-navigation .stButton button * {
+          color: var(--text) !important;
+          font-size: 14px !important;
+          white-space: nowrap;
+        }
+
+        .st-key-feature-navigation .stButton button [data-testid="stIconMaterial"],
+        .st-key-secondary-feature-navigation .stButton button [data-testid="stIconMaterial"],
+        .st-key-ai-tools-feature-navigation .stButton button [data-testid="stIconMaterial"] {
+          color: var(--muted) !important;
+          font-size: 20px !important;
+        }
+
+        .st-key-feature-navigation .stButton button:hover,
+        .st-key-secondary-feature-navigation .stButton button:hover,
+        .st-key-ai-tools-feature-navigation .stButton button:hover {
+          border-color: var(--border) !important;
+          background: rgba(56, 189, 248, 0.08) !important;
+        }
+
+        .st-key-feature-navigation .stButton button[kind="primary"],
+        .st-key-secondary-feature-navigation .stButton button[kind="primary"],
+        .st-key-ai-tools-feature-navigation .stButton button[kind="primary"] {
+          border-color: rgba(56, 189, 248, 0.55) !important;
+          background: linear-gradient(100deg, rgba(56, 189, 248, 0.20), rgba(124, 58, 237, 0.22)) !important;
+        }
+
+        .st-key-feature-navigation .stButton button[kind="primary"] *,
+        .st-key-secondary-feature-navigation .stButton button[kind="primary"] *,
+        .st-key-ai-tools-feature-navigation .stButton button[kind="primary"] * {
+          color: var(--text) !important;
+          font-weight: 700 !important;
+        }
+
+        .st-key-feature-navigation .stButton button[kind="primary"] [data-testid="stIconMaterial"],
+        .st-key-secondary-feature-navigation .stButton button[kind="primary"] [data-testid="stIconMaterial"],
+        .st-key-ai-tools-feature-navigation .stButton button[kind="primary"] [data-testid="stIconMaterial"] {
+          color: var(--primary) !important;
+        }
+
+        .st-key-feature-navigation .stButton button[kind="primary"] {
+          box-shadow: inset 0 -2px 0 var(--primary) !important;
+        }
+
+        /* Sidebar entries: full width, left aligned, active bar on the left */
+        .st-key-secondary-feature-navigation,
+        .st-key-ai-tools-feature-navigation {
+          gap: 0.3rem !important;
+        }
+
+        .st-key-secondary-feature-navigation .stButton button,
+        .st-key-ai-tools-feature-navigation .stButton button {
+          justify-content: flex-start !important;
+          padding: 0.5rem 0.75rem !important;
+          background: rgba(11, 18, 40, 0.35) !important;
+        }
+
+        .st-key-secondary-feature-navigation .stButton button > div,
+        .st-key-ai-tools-feature-navigation .stButton button > div {
+          justify-content: flex-start !important;
+          width: 100%;
+        }
+
+        .st-key-secondary-feature-navigation .stButton button[kind="primary"],
+        .st-key-ai-tools-feature-navigation .stButton button[kind="primary"] {
+          box-shadow: inset 3px 0 0 var(--primary) !important;
+        }
+
+        @media (max-width: 1100px) {
+          .st-key-feature-navigation [data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important;
+          }
+          .st-key-feature-navigation [data-testid="stColumn"],
+          .st-key-feature-navigation [data-testid="column"] {
+            flex: 1 1 30% !important;
+            min-width: 140px !important;
+          }
+        }
         </style>
         """,
         unsafe_allow_html=True,

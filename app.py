@@ -908,50 +908,43 @@ def process_voice_message():
   st.session_state["voice_speech_pending"] = True
 
 
-def update_navigation(widget_key):
-  st.session_state["navigation_page"] = st.session_state[widget_key]
+def go_to_page(page_name):
+  st.session_state["navigation_page"] = page_name
+
+
+def render_nav_button(page_name, current):
+  """One navigation entry. Plain st.button (stable across Streamlit versions
+  and operating systems) with a Material icon; the active page is "primary"."""
+  st.button(
+    NAVIGATION_TEXT.get(page_name, page_name),
+    key="nav_" + page_name.lower().replace(" ", "_").replace("&", "and"),
+    icon=f":material/{NAVIGATION_ICONS[page_name]}:",
+    type="primary" if page_name == current else "secondary",
+    use_container_width=True,
+    on_click=go_to_page,
+    args=(page_name,),
+  )
 
 
 current_page = st.session_state.get("navigation_page", "Dashboard")
-navigation_widgets = [
-  ("feature_navigation_page", PRIMARY_NAVIGATION_PAGES),
-  ("ai_tools_navigation_page", AI_TOOL_NAVIGATION_PAGES),
-  ("more_navigation_page", SECONDARY_NAVIGATION_PAGES),
-]
-for widget_key, group_pages in navigation_widgets:
-  st.session_state[widget_key] = current_page if current_page in group_pages else None
 
 with st.container(key="feature-navigation"):
-  st.radio(
-    "Main navigation",
-    PRIMARY_NAVIGATION_PAGES,
-    key="feature_navigation_page",
-    index=None,
-    label_visibility="collapsed",
-    format_func=lambda value: NAVIGATION_LABELS.get(value, value),
-    on_change=update_navigation,
-    args=("feature_navigation_page",),
-  )
+  nav_columns = st.columns(len(PRIMARY_NAVIGATION_PAGES))
+  for nav_column, nav_page in zip(nav_columns, PRIMARY_NAVIGATION_PAGES):
+    with nav_column:
+      render_nav_button(nav_page, current_page)
 
-for group_name, widget_key, group_pages, container_key in (
-  ("Workspace", "more_navigation_page", SECONDARY_NAVIGATION_PAGES, "secondary-feature-navigation"),
-  ("Help", "ai_tools_navigation_page", AI_TOOL_NAVIGATION_PAGES, "ai-tools-feature-navigation"),
+for group_name, group_pages, container_key in (
+  ("Workspace", SECONDARY_NAVIGATION_PAGES, "secondary-feature-navigation"),
+  ("Help", AI_TOOL_NAVIGATION_PAGES, "ai-tools-feature-navigation"),
 ):
   st.sidebar.markdown(
     f"<div class='nav-section'>{escape(group_name)}</div>",
     unsafe_allow_html=True,
   )
   with st.sidebar.container(key=container_key):
-    st.radio(
-      group_name,
-      group_pages,
-      key=widget_key,
-      index=None,
-      label_visibility="collapsed",
-      format_func=lambda value: NAVIGATION_LABELS.get(value, value),
-      on_change=update_navigation,
-      args=(widget_key,),
-    )
+    for nav_page in group_pages:
+      render_nav_button(nav_page, current_page)
 
 page = st.session_state["page"] = st.session_state["navigation_page"]
 
