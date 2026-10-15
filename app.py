@@ -32,6 +32,11 @@ from utils.recorder import get_video_recorder
 from services.email_service import get_email_service
 from services.telegram_service import get_telegram_service
 from services.face_service import FaceService
+from services.video_face_match import (
+  best_match_in_frame as video_best_face_match,
+  reference_face as video_reference_face,
+  threshold_for as video_face_threshold,
+)
 from core.tracker import ObjectTracker
 from events.alert_manager import AlertManager
 from core.border_analytics import ZoneManager, LoiteringTimer
@@ -1421,8 +1426,24 @@ elif page == "Video Fast Review":
             found_face_enc = None
             is_person = False
 
-            # 1. First check if reference image contains a human face
-            try:
+            face_backend = None
+            ref_face_count = 0
+            # 1. First check if reference image contains a human face (SFace, same models as Face Registration)
+            vfr_face_service = st.session_state.get("face_service")
+            if vfr_face_service is not None and vfr_face_service.is_available():
+              try:
+                sf_box, sf_emb, ref_face_count = video_reference_face(vfr_face_service, ref_img_cv)
+                if sf_emb is not None:
+                  found_face_enc = sf_emb
+                  face_backend = "sface"
+                  is_person = True
+                  left, top, right, bottom = sf_box
+                  cv2.rectangle(preview_img, (left, top), (right, bottom), (0, 255, 0), 3)
+                  cv2.putText(preview_img, "Reference face", (left, max(top - 10, 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
+              except Exception:
+                pass
+            if not is_person:
+             try:
               import face_recognition
               ref_rgb = cv2.cvtColor(ref_img_cv, cv2.COLOR_BGR2RGB)
               ref_face_locs = face_recognition.face_locations(ref_rgb)
@@ -1434,11 +1455,13 @@ elif page == "Video Fast Review":
                 ref_face_encs = face_recognition.face_encodings(ref_rgb, [best_face_loc])
                 if len(ref_face_encs) > 0:
                   found_face_enc = ref_face_encs[0]
+                  face_backend = "dlib"
+                  ref_face_count = len(ref_face_locs)
                   is_person = True
                   top, right, bottom, left = best_face_loc
                   cv2.rectangle(preview_img, (left, top), (right, bottom), (0, 255, 0), 3)
-                  cv2.putText(preview_img, "Target Individual", (left, max(top - 10, 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
-            except Exception:
+                  cv2.putText(preview_img, "Reference face", (left, max(top - 10, 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
+             except Exception:
               pass
 
             # 2. If not a face, run YOLO object detection to crop the reference object
@@ -1465,6 +1488,8 @@ elif page == "Video Fast Review":
               "name": ref_image_file.name,
               "size": len(file_bytes),
               "face_enc": found_face_enc,
+              "face_backend": face_backend,
+              "face_count": ref_face_count,
               "is_person": is_person,
               "auto_cat": auto_cat,
               "embedding": ref_emb,
@@ -1483,8 +1508,17 @@ elif page == "Video Fast Review":
           auto_cat = cached["auto_cat"]
 
           if ref_is_person:
-            st.success("Target Identified: **Specific Person (Face Biometrics)**")
-            st.caption("Precision matching active: only this exact individual's facial biometric signature will be detected. All other persons will be strictly excluded.")
+            st.success("Reference: **a specific person (face matching)**")
+            if cached.get("face_backend") == "sface":
+              st.caption("Each analysed frame's faces are compared with this face using SFace (the same model as Face "
+                         "Registration). Only the most similar face per frame is kept, and only if it reaches the "
+                         "similarity threshold below. Look-alikes, side views and blurred faces can still be wrong.")
+            else:
+              st.warning("SFace face models are unavailable, so the older dlib matcher is used with stricter limits. "
+                         "Run the site once with internet access to download the SFace models for better accuracy.")
+            if cached.get("face_count", 0) > 1:
+              st.warning(f"The reference image contains {cached['face_count']} faces; the largest one (green box) is used. "
+                         "Use a photo of only the target person for reliable results.")
             target_object = "person"
           elif auto_cat:
             st.success(f"Detected Reference Object: **{auto_cat.title()}**")
@@ -1505,18 +1539,25 @@ elif page == "Video Fast Review":
       "Matching Precision",
       ["Strict (High Precision)", "Balanced (Standard)", "Tolerant (High Recall)"],
       index=1,
-      help="Balanced matches naturally across varying video lighting and angles."
+      help="Strict: fewer wrong people, may miss side or blurred faces. Balanced: the validated SFace "
+           "threshold (0.363). Tolerant: finds more appearances but look-alikes may be included."
     )
 
+    min_face_sim = video_face_threshold(precision_mode)
     if precision_mode == "Strict (High Precision)":
-      max_face_dist = 0.49
+      max_face_dist = 0.40
       min_obj_sim = 0.70
     elif precision_mode == "Balanced (Standard)":
-      max_face_dist = 0.55
+      max_face_dist = 0.45
       min_obj_sim = 0.62
     else:
-      max_face_dist = 0.60
+      max_face_dist = 0.50
       min_obj_sim = 0.52
+    if search_type == "Reference Image" and st.session_state.get("vfr_ref") and st.session_state["vfr_ref"].get("is_person"):
+      if st.session_state["vfr_ref"].get("face_backend") == "sface":
+        st.caption(f"Face similarity needed: **{min_face_sim:.2f}** (SFace cosine similarity)")
+      else:
+        st.caption(f"Maximum dlib face distance: **{max_face_dist:.2f}**")
 
     sample_rate = st.slider("Frames per second to analyze", 1, 5, 2, help="Higher FPS analyzes more moments; lower FPS processes faster.")
     confidence = st.slider("Detection Confidence", 0.1, 1.0, 0.30, 0.05, help="Minimum threshold for YOLO object detector.")
@@ -1538,6 +1579,15 @@ elif page == "Video Fast Review":
       
       # Use a persistent temp path per uploaded video to prevent repeated writes
       video_cache_key = f"vfr_video_{video_file.name}_{video_file.size}"
+      old_key = st.session_state.get("vfr_video_key")
+      if old_key and old_key != video_cache_key:
+        old_path = st.session_state.pop(old_key, None)
+        if old_path and os.path.exists(old_path):
+          try:
+            os.unlink(old_path)
+          except OSError:
+            pass
+      st.session_state["vfr_video_key"] = video_cache_key
       temp_path = st.session_state.get(video_cache_key)
       if not temp_path or not os.path.exists(temp_path):
         ext = os.path.splitext(video_file.name)[1] or ".mp4"
@@ -1550,13 +1600,16 @@ elif page == "Video Fast Review":
 
       can_start = True
       cached = st.session_state.get("vfr_ref")
+      vfr_signature = (video_cache_key, search_type, target_object,
+                       (cached or {}).get("name") if search_type == "Reference Image" else None,
+                       precision_mode, sample_rate, confidence, vfr_rot)
       if search_type == "Reference Image" and (cached is None or (cached["face_enc"] is None and cached["embedding"] is None)):
         st.warning("Please upload a reference image on the right first.")
         can_start = False
 
       col_btn1, col_btn2 = st.columns([3, 1])
       with col_btn1:
-        start_btn = st.button("🔍 Start Fast Review", type="primary", use_container_width=True, disabled=not can_start)
+        start_btn = st.button("Start Fast Review", icon=":material/search:", type="primary", use_container_width=True, disabled=not can_start)
       with col_btn2:
         if st.session_state.get("vfr_results") is not None:
           if st.button("Clear Results", use_container_width=True):
@@ -1588,6 +1641,12 @@ elif page == "Video Fast Review":
           start_time_proc = time.time()
 
           ref_face_enc = cached.get("face_enc") if cached else None
+          use_sface = (search_type == "Reference Image" and ref_face_enc is not None
+                       and cached.get("face_backend") == "sface")
+          vfr_face_service = st.session_state.get("face_service")
+          sampled_frames = 0
+          matched_frames = 0
+          frames_with_faces = 0
           ref_deep_emb = cached.get("embedding") if cached else None
           ref_color_h = cached.get("hist") if cached else None
 
@@ -1608,10 +1667,29 @@ elif page == "Video Fast Review":
             progress_bar.progress(min(1.0, current_frame / max(1, total_frames)))
 
             small_frame = cv2.resize(frame, (640, 480))
-            # Run detection directly (faster and cleaner than track on sampled frames)
-            results = det_model(small_frame, conf=confidence, verbose=False)
-
+            sampled_frames += 1
             matched_boxes_in_frame = []
+
+            if use_sface:
+              # Compare every face in the full-resolution frame with the reference; keep only the best one.
+              results = []
+              try:
+                face_hit, faces_seen = video_best_face_match(vfr_face_service, frame, ref_face_enc, min_face_sim)
+              except Exception:
+                face_hit, faces_seen = None, 0
+              if faces_seen:
+                frames_with_faces += 1
+              if face_hit is not None:
+                fh, fw = frame.shape[:2]
+                fx1, fy1, fx2, fy2 = face_hit.box
+                matched_boxes_in_frame.append({
+                  "box": (int(fx1 * 640 / fw), int(fy1 * 480 / fh), int(fx2 * 640 / fw), int(fy2 * 480 / fh)),
+                  "label": f"Same person (similarity {face_hit.similarity:.2f})",
+                  "sim": face_hit.similarity,
+                })
+            else:
+              # Run detection directly (faster and cleaner than track on sampled frames)
+              results = det_model(small_frame, conf=confidence, verbose=False)
 
             for result in results:
               if result.boxes is not None:
@@ -1661,7 +1739,7 @@ elif page == "Video Fast Review":
                                   offset_norm = abs(face_cx - box_cx) / box_w
                                   matched_boxes_in_frame.append({
                                     "box": (x1, y1, x2, y2),
-                                    "label": f"Target Match ({match_sim * 100:.0f}%)",
+                                    "label": f"Same person (distance {dist:.2f})",
                                     "sim": match_sim,
                                     "offset_norm": offset_norm,
                                     "area": area
@@ -1699,10 +1777,11 @@ elif page == "Video Fast Review":
                       })
 
             if len(matched_boxes_in_frame) > 0:
-              if ref_face_enc is not None:
-                matched_boxes_in_frame.sort(key=lambda m: (m.get("offset_norm", 0), m.get("area", 0)))
-              else:
-                matched_boxes_in_frame.sort(key=lambda m: m["sim"], reverse=True)
+              matched_frames += 1
+              matched_boxes_in_frame.sort(key=lambda m: m["sim"], reverse=True)
+              if search_type == "Reference Image":
+                # A reference is one specific person/object: never label several boxes in one frame as it.
+                matched_boxes_in_frame = matched_boxes_in_frame[:1]
 
               best_match = matched_boxes_in_frame[0]
 
@@ -1722,7 +1801,7 @@ elif page == "Video Fast Review":
               if not found_timestamps or (timestamp_sec - found_timestamps[-1]['seconds']) > 1.5:
                 match_info = f"{formatted_time} ({timestamp_sec:.1f}s)"
                 if search_type == "Reference Image":
-                  match_info += f" — Match: {best_match['sim'] * 100:.0f}%"
+                  match_info += f" — {best_match['label']}"
                 else:
                   match_info += f" — {best_match['label']}"
 
@@ -1751,6 +1830,10 @@ elif page == "Video Fast Review":
 
           # Save in session state for persistence
           st.session_state["vfr_results"] = {
+            "signature": vfr_signature,
+            "sampled_frames": sampled_frames,
+            "matched_frames": matched_frames,
+            "frames_with_faces": frames_with_faces if use_sface else None,
             "search_lbl": search_lbl,
             "target": target_object,
             "found_timestamps": found_timestamps,
@@ -1761,24 +1844,29 @@ elif page == "Video Fast Review":
 
       # Display persistent results if available
       vfr_res = st.session_state.get("vfr_results")
+      if vfr_res and vfr_res.get("signature") != vfr_signature:
+        vfr_res = None  # results belong to a different video, reference or setting
       if vfr_res:
         matches = vfr_res.get("found_timestamps", [])
         st.markdown("---")
-        st.markdown(f"### 📋 Review Results: **{vfr_res['search_lbl']}**")
+        st.markdown(f"### Review Results: **{vfr_res['search_lbl']}**")
 
         # Summary Metrics
         mcol1, mcol2, mcol3, mcol4 = st.columns(4)
         mcol1.metric("Video Length", f"{vfr_res['duration']:.1f}s")
         mcol2.metric("Scan Time", f"{vfr_res['elapsed']}s")
         mcol3.metric("Appearances", f"{len(matches)}")
-        presence_pct = (len(matches) * 1.5 / max(1.0, vfr_res['duration'])) * 100
-        mcol4.metric("Presence %", f"{min(100.0, presence_pct):.0f}%")
+        mcol4.metric("Frames with a match", f"{vfr_res.get('matched_frames', 0)} / {vfr_res.get('sampled_frames', 0)}",
+                     help="Analysed (sampled) frames in which the target was found.")
+        if vfr_res.get("frames_with_faces") == 0:
+          st.info("No usable face was detected in any analysed frame, so the person could not be searched for. "
+                  "Faces must be visible and at least about 24 pixels tall.")
 
         if matches:
           st.success(f"Successfully identified {len(matches)} occurrences of **{vfr_res['search_lbl']}**.")
           
           # Timeline Badges
-          timeline_badges = " ".join([f"`⏱ {m['time_str'].split(' ')[0]}`" for m in matches[:10]])
+          timeline_badges = " ".join([f"`{m['time_str'].split(' ')[0]}`" for m in matches[:10]])
           if len(matches) > 10:
             timeline_badges += f" *+{len(matches)-10} more*"
           st.markdown(f"**Timeline:** {timeline_badges}")
@@ -1800,14 +1888,15 @@ elif page == "Video Fast Review":
             "timeline": [{"timestamp": m["time_str"], "seconds": m["seconds"], "label": m["label"]} for m in matches]
           }
           st.download_button(
-            "📥 Download Review Timeline (JSON)",
+            "Download Review Timeline (JSON)",
+            icon=":material/download:",
             data=json.dumps(export_data, indent=2),
             file_name=f"fast_video_review_{vfr_res['target'] or 'search'}.json",
             mime="application/json",
             use_container_width=True
           )
         else:
-          st.warning(f"Could not find any matching appearances of **{vfr_res['search_lbl']}** in this video. Tip: Try adjusting the detection confidence or setting precision to 'Tolerant'.")
+          st.warning(f"Could not find any matching appearances of **{vfr_res['search_lbl']}** in this video. Tip: use a clearer reference photo, or try 'Tolerant' precision (more look-alike matches possible).")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
