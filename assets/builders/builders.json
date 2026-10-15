@@ -1,0 +1,33 @@
+{
+  "title": "Meet the Builders",
+  "subtitle": "The team behind Smart Vision",
+  "builders": [
+    {
+      "id": "builder-1",
+      "placeholder": true,
+      "photo": "",
+      "name": "",
+      "mobile": "",
+      "show_mobile": false,
+      "about": ""
+    },
+    {
+      "id": "builder-2",
+      "placeholder": true,
+      "photo": "",
+      "name": "",
+      "mobile": "",
+      "show_mobile": false,
+      "about": ""
+    },
+    {
+      "id": "builder-3",
+      "placeholder": true,
+      "photo": "",
+      "name": "",
+      "mobile": "",
+      "show_mobile": false,
+      "about": ""
+    }
+  ]
+}

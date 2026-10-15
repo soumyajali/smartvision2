@@ -112,7 +112,7 @@ export default function (component) {
   
   if (elStatus && elCard) {
       if (data.alerts > 0) {
-          elStatus.textContent = "⚠ Security Alert Active";
+          elStatus.textContent = "Security Alert Active";
           elStatus.style.color = "#f87171"; // Red
           elCard.style.borderColor = "rgba(248, 113, 113, 0.4)";
           elCard.style.boxShadow = "0 10px 40px rgba(248, 113, 113, 0.15)";

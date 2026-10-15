@@ -1,7 +1,20 @@
+# Website theme (Streamlit). Dark navy palette so every built-in widget —
+# labels, inputs, dropdown menus, sliders, tooltips, tables and charts — is
+# drawn with light text on the dark background. Custom component styles live
+# in ui/theme.py and use the same values as CSS variables.
 [theme]
-base="light"
-primaryColor="#10B981"
-backgroundColor="#F7F9FC"
-secondaryBackgroundColor="#FFFFFF"
-textColor="#172033"
-font="sans serif"
+base = "dark"
+primaryColor = "#38BDF8"
+backgroundColor = "#0B1228"
+secondaryBackgroundColor = "#111B36"
+textColor = "#F1F5F9"
+linkColor = "#38BDF8"
+borderColor = "#263B61"
+showWidgetBorder = true
+font = "sans serif"
+
+[theme.sidebar]
+backgroundColor = "#111B36"
+secondaryBackgroundColor = "#0B1228"
+textColor = "#F1F5F9"
+borderColor = "#263B61"

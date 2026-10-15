@@ -217,15 +217,16 @@ transform = transforms.Compose([
 
 # ---------------- GLOBAL MODERN CSS ----------------
 def get_theme_css():
+  """Page-specific component styles. Colours come from the palette variables
+  defined in ui/theme.py (and .streamlit/config.toml); no light-theme values."""
   return """
 <style>
-/* header[data-testid="stHeader"] {display: none;} */
 footer {display: none;}
 
 .stApp {
-  background-color: #F7F9FC !important;
+  background-color: var(--bg) !important;
   font-family: 'Inter', sans-serif !important;
-  color: #172033 !important;
+  color: var(--text) !important;
 }
 
 /* Main Content Constraints */
@@ -235,121 +236,115 @@ footer {display: none;}
   padding-bottom: 120px !important;
 }
 
-/* Sidebar Customization */
+/* Sidebar */
 [data-testid="stSidebar"] {
-  background-color: #FFFFFF !important;
-  border-right: 1px solid #E2E8F0 !important;
+  background-color: var(--panel) !important;
+  border-right: 1px solid var(--border) !important;
   min-width: 250px !important;
-  max-width: 280px !important;
+  max-width: 300px !important;
 }
 [data-testid="stSidebar"] > div:first-child {
-  padding-top: 50px !important;
+  padding-top: 8px !important;
 }
 
-
-/* Typography Overrides */
-h1, h2, h3, h4, h5, h6, .stMarkdown p {
-  color: #172033 !important;
-}
+/* Typography */
 .section-title {
-  font-size: 28px !important; font-weight: 800 !important; color: #172033 !important;
+  font-size: 28px !important; font-weight: 800 !important; color: var(--text) !important;
   margin-bottom: 4px !important;
 }
 .sub-text {
-  font-size: 15px !important; color: #64748B !important; margin-bottom: 24px !important;
+  font-size: 15px !important; color: var(--muted) !important; margin-bottom: 24px !important;
+}
+.sv-label {
+  font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--muted) !important;
+}
+.sv-value { font-size: 18px; font-weight: 700; color: var(--text) !important; }
+.sv-value.is-ok { color: var(--success) !important; }
+.sv-value.is-warn { color: var(--warning) !important; }
+.sv-value.is-muted { color: var(--muted) !important; }
+.sv-text-success { color: var(--success) !important; }
+.sv-text-muted { color: var(--muted) !important; }
+@media (max-width: 640px) {
+  .sv-value { margin-bottom: 0.6rem; }
 }
 
-/* Cards (Standard Dashboard Cards) */
-.card-box, div[data-testid="stMetric"], div.stExpander {
-  background-color: #FFFFFF !important; 
-  padding: 24px !important; 
+/* Icons (Streamlit's bundled Material Symbols font, used for every UI icon) */
+.sv-icon {
+  font-family: var(--icon-font);
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: -0.2em;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
+  color: var(--primary);
+}
+
+/* Cards */
+.card-box, div[data-testid="stMetric"] {
+  background-color: var(--card) !important;
+  padding: 20px !important;
   border-radius: 16px !important;
-  border: 1px solid #E2E8F0 !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02) !important;
-  margin-bottom: 20px !important;
-  color: #172033 !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18) !important;
+  margin-bottom: 16px !important;
+  color: var(--text) !important;
 }
-
-/* KPIs / Metrics specific styling */
 div[data-testid="stMetricValue"] {
-  font-size: 36px !important; 
-  font-weight: 800 !important; 
-  color: #172033 !important;
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  color: var(--text) !important;
 }
 div[data-testid="stMetricLabel"] {
-  font-size: 14px !important; 
-  font-weight: 600 !important; 
-  color: #64748B !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--muted) !important;
 }
 
 /* Buttons */
-.stButton > button {
+.stButton button {
   border-radius: 10px !important;
   font-weight: 600 !important;
   padding: 0.5rem 1rem !important;
 }
+.btn-start > button { background-color: var(--success) !important; color: var(--on-primary) !important; border: none !important; }
+.btn-stop > button { background-color: var(--danger) !important; color: var(--on-primary) !important; border: none !important; }
 
-/* Primary Start/Green */
-.btn-start > button {
-  background-color: #10B981 !important;
-  color: white !important;
-  border: none !important;
-}
-.btn-start > button:hover {
-  background-color: #059669 !important;
-}
-
-/* Danger Stop/Red */
-.btn-stop > button {
-  background-color: #EF4444 !important;
-  color: white !important;
-  border: none !important;
-}
-.btn-stop > button:hover {
-  background-color: #DC2626 !important;
-}
-
-/* Chat Input Container Fixes */
+/* Chat input */
 div[data-testid="stChatInput"] {
-  background-color: #121A3D !important;
-  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  background-color: var(--card) !important;
+  border: 1px solid var(--border-strong) !important;
   border-radius: 16px !important;
   padding: 4px !important;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24) !important;
 }
 div[data-testid="stChatInput"] textarea {
-  color: #E6EEFF !important;
+  color: var(--text) !important;
   background-color: transparent !important;
-  caret-color: #38BDF8 !important;
+  caret-color: var(--primary) !important;
   font-size: 16px !important;
   line-height: 1.5 !important;
 }
-div[data-testid="stChatInput"] textarea::placeholder {
-  color: #B8C7E5 !important;
-  opacity: 1 !important;
-}
-div[data-testid="stChatInput"] button {
-  background-color: #10B981 !important;
-  color: white !important;
-  border-radius: 50% !important;
-}
-div[data-testid="stChatInput"] button:hover {
-  background-color: #059669 !important;
-}
-
-/* Remove dark background around chat input */
+div[data-testid="stChatInput"] textarea::placeholder { color: var(--muted) !important; opacity: 1 !important; }
+div[data-testid="stChatInput"] button { background-color: var(--primary) !important; color: var(--on-primary) !important; border-radius: 50% !important; }
+div[data-testid="stChatInput"] button:hover { background-color: var(--primary-hover) !important; }
 .stChatInputContainer, div[data-testid="stBottomBlockContainer"] {
   background-color: transparent !important;
   padding-bottom: 24px !important;
 }
-div[data-testid="stBottom"] {
-  background-color: #0B1230 !important;
-}
+div[data-testid="stBottom"] { background-color: var(--bg) !important; }
 
-/* Chat Bubbles */
+/* Chat bubbles */
 div[data-testid="stChatMessage"] {
-  background-color: #121A3D !important;
-  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  background-color: var(--card) !important;
+  border: 1px solid var(--border) !important;
   border-radius: 16px !important;
   padding: 16px !important;
   margin-bottom: 12px !important;
@@ -358,11 +353,12 @@ div[data-testid="stChatMessage"] {
 div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"],
 div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p,
 div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
-  color: #E6EEFF !important;
+  color: var(--text) !important;
   font-size: 16px !important;
   line-height: 1.65 !important;
 }
 
+/* Voice assistant */
 .assistant-hero {
   position: relative;
   overflow: hidden;
@@ -372,17 +368,17 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
   gap: 28px;
   padding: 34px 38px;
   margin: 8px 0 26px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid var(--border);
   border-radius: 26px;
-  color: #FFFFFF;
-  background: radial-gradient(circle at 85% 15%, rgba(96,165,250,.38), transparent 28%),
-              linear-gradient(120deg, #10244a 0%, #263c75 52%, #5542a6 100%);
-  box-shadow: 0 18px 42px rgba(42, 57, 112, .18);
+  color: var(--text);
+  background: radial-gradient(circle at 85% 15%, rgba(56,189,248,.28), transparent 30%),
+              linear-gradient(120deg, #10244a 0%, #1d3266 52%, #3b3486 100%);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .25);
 }
 .assistant-hero-copy { position: relative; z-index: 1; max-width: 650px; }
 .assistant-eyebrow {
   margin-bottom: 10px;
-  color: #c7d2fe;
+  color: #C7D7F5;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: .16em;
@@ -396,7 +392,7 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
   letter-spacing: -.035em;
   line-height: 1.12;
 }
-.assistant-hero p { margin: 0; color: #e0e7ff !important; font-size: 15px; line-height: 1.65; }
+.assistant-hero p { margin: 0; color: #E2E8F0 !important; font-size: 15px; line-height: 1.65; }
 .assistant-orb {
   position: relative;
   display: grid;
@@ -404,14 +400,14 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
   width: 102px;
   height: 102px;
   place-items: center;
-  border: 1px solid rgba(255,255,255,.68);
+  border: 1px solid rgba(255,255,255,.6);
   border-radius: 50%;
-  color: #FFFFFF;
+  color: #0B1228;
   background: linear-gradient(145deg, #67e8f9, #818cf8 54%, #c084fc);
-  box-shadow: 0 0 0 10px rgba(255,255,255,.08), 0 0 44px rgba(129,140,248,.65);
-  font-size: 39px;
+  box-shadow: 0 0 0 10px rgba(255,255,255,.06), 0 0 44px rgba(129,140,248,.55);
   animation: assistant-orb-float 4s ease-in-out infinite;
 }
+.assistant-orb .sv-icon { color: #0B1228; font-size: 44px; }
 .assistant-orb:after {
   position: absolute;
   inset: -12px;
@@ -425,7 +421,7 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
 }
 .assistant-section-label {
   margin: 0 0 10px;
-  color: #64748B;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -434,64 +430,56 @@ div[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
 .assistant-card {
   padding: 16px 18px;
   margin: 0 0 8px;
-  border: 1px solid #E3E8F4;
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: linear-gradient(145deg, #FFFFFF, #F8FAFF);
-  box-shadow: 0 5px 16px rgba(31, 48, 87, .045);
+  background: var(--card);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, .18);
 }
 .assistant-card-label {
   margin-bottom: 7px;
-  color: #64748B;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-.assistant-card p { margin: 0; color: #1E293B; line-height: 1.65; }
+.assistant-card p { margin: 0; color: var(--text); line-height: 1.65; }
 .st-key-assistant_recorder {
   padding: 20px 22px 12px;
   margin: 12px 0 20px;
-  border: 1px solid #DCE4F3;
+  border: 1px solid var(--border);
   border-radius: 22px;
-  background: linear-gradient(145deg, #FFFFFF 15%, #F2F5FF 100%);
-  box-shadow: 0 12px 28px rgba(34, 55, 102, .07);
+  background: var(--card);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
 }
-.st-key-assistant_recorder .assistant-recorder-title { color: #172033; font-size: 16px; font-weight: 700; }
-.st-key-assistant_recorder .assistant-recorder-hint { margin: 4px 0 12px; color: #64748B; font-size: 13px; }
-.st-key-assistant_recorder button[kind="primary"] {
-  min-height: 46px;
-  border: 0;
-  border-radius: 13px;
-  background: linear-gradient(100deg, #4F46E5, #7C3AED);
-  box-shadow: 0 6px 16px rgba(99, 75, 215, .2);
-}
-[class*="st-key-assistant_prompt_"] .stButton > button {
+.st-key-assistant_recorder .assistant-recorder-title { color: var(--text); font-size: 16px; font-weight: 700; }
+.st-key-assistant_recorder .assistant-recorder-hint { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
+[class*="st-key-assistant_prompt_"] .stButton button {
   min-height: 64px;
   height: 100%;
   white-space: normal;
-  border: 1px solid #E1E7F2;
+  border: 1px solid var(--border) !important;
   border-radius: 15px;
-  background: #FFFFFF;
-  color: #334155;
-  box-shadow: 0 4px 14px rgba(31, 48, 87, .04);
-  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  background: var(--card) !important;
+  color: var(--text) !important;
+  transition: transform .16s ease, border-color .16s ease;
 }
-[class*="st-key-assistant_prompt_"] .stButton > button:hover {
+[class*="st-key-assistant_prompt_"] .stButton button:hover {
   transform: translateY(-2px);
-  border-color: #A5B4FC;
-  color: #4338CA;
-  box-shadow: 0 8px 18px rgba(79, 70, 229, .1);
+  border-color: var(--primary) !important;
 }
 @media (max-width: 640px) {
   .assistant-hero { padding: 25px 23px; gap: 15px; border-radius: 21px; }
-  .assistant-orb { flex-basis: 68px; width: 68px; height: 68px; font-size: 28px; }
-  .assistant-recorder { padding: 16px 15px 8px; }
+  .assistant-orb { flex-basis: 68px; width: 68px; height: 68px; }
+  .assistant-orb .sv-icon { font-size: 30px; }
 }
 
-/* Make Video Container Look Pro */
-img, video, canvas {
+/* Media in page content (not the sidebar logo) */
+[data-testid="stMain"] img,
+[data-testid="stMain"] video,
+[data-testid="stMain"] canvas {
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
 }
 </style>
 """
@@ -503,21 +491,32 @@ def speak_in_browser(message: str, auto_speak: bool = True):
   """Speak an answer and provide browser controls to replay or stop it."""
   components.html(
     f"""
-    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-family:sans-serif;">
-      <button id="speak-answer" type="button" style="
-        border: 1px solid #c7d2fe; border-radius: 10px; padding: 9px 14px;
-        background: #FFFFFF; color: #4338ca; font: 600 13px sans-serif;
-        cursor: pointer;">
-        ▶ Speak answer
+    <style>
+      body {{ margin: 0; background: transparent; }}
+      .speech-btn {{
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1px solid #263B61; border-radius: 10px; padding: 9px 14px;
+        background: #111B36; color: #F1F5F9; font: 600 13px Inter, sans-serif;
+        cursor: pointer;
+      }}
+      .speech-btn:hover {{ border-color: #38BDF8; }}
+      .speech-btn:focus-visible {{ outline: 2px solid #38BDF8; outline-offset: 2px; }}
+      .speech-btn svg {{ width: 16px; height: 16px; stroke: currentColor; fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }}
+      #speak-answer svg {{ color: #38BDF8; }}
+      #stop-answer svg {{ color: #F87171; }}
+    </style>
+    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-family:Inter, sans-serif;">
+      <button id="speak-answer" class="speech-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+        Speak answer
       </button>
-      <button id="stop-answer" type="button" style="
-        border: 1px solid #fecaca; border-radius: 10px; padding: 9px 14px;
-        background: #fff7f7; color: #b91c1c; font: 600 13px sans-serif;
-        cursor: pointer;">
-        ■ Stop speaking
+      <button id="stop-answer" class="speech-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg>
+        Stop speaking
       </button>
       <span id="speech-status" role="status" aria-live="polite"
-        style="color:#64748b; font-size:12px;"></span>
+        style="color:#B8C4D9; font-size:12px;"></span>
     </div>
     <script>
     const message = {json.dumps(message)};
@@ -665,14 +664,29 @@ def get_color_histogram(image_bgr):
 
 # ---------------- SIDEBAR ----------------
 import os
-st.sidebar.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
+@st.cache_data(show_spinner=False)
+def _logo_data_uri(path: str, modified: float) -> str:
+  with open(path, "rb") as logo_file:
+    return "data:image/png;base64," + base64.b64encode(logo_file.read()).decode("ascii")
+
+
+# The logo is rendered as plain HTML (not st.image) so it gets no frame, border
+# or toolbar. logo.png has an opaque navy background; "mix-blend-mode: lighten"
+# (ui/theme.py) lets that background merge with the sidebar instead of showing
+# as a rectangle, without editing the original artwork.
 if os.path.exists("logo.png"):
-  st.sidebar.image("logo.png", use_container_width=True)
+  st.sidebar.markdown(
+    "<div class='sidebar-logo'><img class='sidebar-logo-img' alt='Smart Vision logo' "
+    f"src='{_logo_data_uri('logo.png', os.path.getmtime('logo.png'))}'/></div>",
+    unsafe_allow_html=True,
+  )
 else:
-  st.sidebar.markdown("*(Please save the logo as `logo.png` in the project folder to display it here)*")
-st.sidebar.markdown('</div>', unsafe_allow_html=True)
-st.sidebar.markdown('<p class="sidebar-brand">SMART VISION</p>', unsafe_allow_html=True)
-st.sidebar.markdown('<div class="sidebar-tagline">Real-Time Object Detection</div>', unsafe_allow_html=True)
+  st.sidebar.caption("Logo file logo.png not found in the project folder.")
+st.sidebar.markdown(
+  "<div class='sidebar-brand-block'><p class='sidebar-brand'>SMART VISION</p>"
+  "<div class='sidebar-tagline'>Real-Time Object Detection</div></div>",
+  unsafe_allow_html=True,
+)
 
 if "ai_provider" not in st.session_state:
   st.session_state["ai_provider"] = "auto"
@@ -746,7 +760,8 @@ NAVIGATION_PAGES = [
     "Research Evaluation",
     "Settings",
     "Video Fast Review",
-    "Drowsiness Monitor"
+    "Drowsiness Monitor",
+    "Meet the Builders",
 ]
 
 PRIMARY_NAVIGATION_PAGES = [
@@ -768,22 +783,39 @@ SECONDARY_NAVIGATION_PAGES = [
   "AutoML & Dataset Pipeline",
   "History",
   "Settings",
+  "Meet the Builders",
 ]
 
-NAVIGATION_LABELS = {
-  "Dashboard": "📊 Dashboard",
-  "Video Fast Review": "⏩ Fast Video Review",
-  "Face Registration": "👤 Face Recognition",
-  "OCR": "🔎 OCR",
-  "Object Detection": "🎯 Object Detection",
-  "Research Evaluation": "🧪 Research Evaluation",
-  "AutoML & Dataset Pipeline": "🧰 AutoML & Dataset Pipeline",
-  "History": "🕘 History",
-  "Settings": "⚙️ Settings",
-  "Drowsiness Monitor": "😴 Drowsiness Monitor",
-  "Vision Chatbot": "💬 Vision Chatbot",
-  "Voice Assistant": "🎙️ Voice Assistant",
+# Navigation icons use Streamlit's built-in Material Symbols (":material/name:"),
+# rendered from the bundled icon font with consistent size and alignment.
+NAVIGATION_ICONS = {
+  "Dashboard": "space_dashboard",
+  "Video Fast Review": "fast_forward",
+  "Face Registration": "face",
+  "OCR": "document_scanner",
+  "Object Detection": "center_focus_strong",
+  "Research Evaluation": "science",
+  "AutoML & Dataset Pipeline": "dataset",
+  "History": "history",
+  "Settings": "settings",
+  "Drowsiness Monitor": "bedtime",
+  "Vision Chatbot": "chat",
+  "Voice Assistant": "mic",
+  "Meet the Builders": "groups",
 }
+NAVIGATION_TEXT = {
+  "Video Fast Review": "Fast Video Review",
+  "Face Registration": "Face Recognition",
+}
+NAVIGATION_LABELS = {
+  page_name: f":material/{NAVIGATION_ICONS[page_name]}: {NAVIGATION_TEXT.get(page_name, page_name)}"
+  for page_name in NAVIGATION_ICONS
+}
+
+
+def ui_icon(name: str, extra_class: str = "") -> str:
+  """HTML for a Material Symbols icon (decorative, hidden from screen readers)."""
+  return f"<span class='sv-icon {extra_class}' aria-hidden='true'>{escape(name)}</span>"
 
 def answer_assistant_question(question):
   chatbot = st.session_state["chatbot"]
@@ -923,10 +955,12 @@ for group_name, widget_key, group_pages, container_key in (
 
 page = st.session_state["page"] = st.session_state["navigation_page"]
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("<b>Alert & Siren Controls</b>", unsafe_allow_html=True)
+st.sidebar.markdown(
+  "<div class='nav-section nav-section-divided'>Alert &amp; Siren Controls</div>",
+  unsafe_allow_html=True,
+)
 siren_toggle = st.sidebar.toggle(
-  "🚨 Siren on Detection",
+  ":material/notifications_active: Siren on Detection",
   value=st.session_state.get("siren_on_detection", True),
   key="siren_toggle",
   help="Play audio siren whenever any object is detected"
@@ -935,32 +969,32 @@ st.session_state["siren_on_detection"] = siren_toggle
 
 siren_btn_col1, siren_btn_col2 = st.sidebar.columns(2)
 with siren_btn_col1:
-  if st.button("🔊 Play Siren", use_container_width=True):
+  if st.button("Play Siren", icon=":material/volume_up:", use_container_width=True):
     play_siren_sound(force=True)
-    st.toast("Siren triggered!", icon="🚨")
+    st.toast("Siren triggered!", icon=":material/campaign:")
 with siren_btn_col2:
-  if st.button("⏹ Stop Siren", use_container_width=True):
+  if st.button("Stop Siren", icon=":material/stop_circle:", use_container_width=True):
     try:
       subprocess.run(["pkill", "-f", "afplay.*siren\\.wav"], check=False)
     except Exception:
       pass
-    st.toast("Siren silenced", icon="⏹")
+    st.toast("Siren silenced", icon=":material/volume_off:")
 
 st.sidebar.markdown("---")
 
 if page == "Settings":
-  st.session_state["voice_enabled"] = st.sidebar.toggle(" Voice Assistant", value=st.session_state.get("voice_enabled", False))
+  st.session_state["voice_enabled"] = st.sidebar.toggle("Voice Assistant", value=st.session_state.get("voice_enabled", False))
   st.sidebar.caption("Announces newly detected objects through this computer's speakers.")
   voice_col1, voice_col2 = st.sidebar.columns(2)
   with voice_col1:
     if st.button("Test voice", width="stretch"):
       get_voice_assistant().speak("Voice assistant is ready.")
-      st.toast("Voice test queued", icon="")
+      st.toast("Voice test queued", icon=":material/record_voice_over:")
   with voice_col2:
     if st.button("Reset voice", width="stretch"):
       get_voice_assistant().clear_all_announcements()
-      st.toast("Voice announcements reset", icon="")
-  st.session_state["confidence_threshold"] = st.sidebar.slider(" Confidence Threshold", 0.05, 1.00, st.session_state.get("confidence_threshold", 0.10), 0.05)
+      st.toast("Voice announcements reset", icon=":material/restart_alt:")
+  st.session_state["confidence_threshold"] = st.sidebar.slider("Confidence Threshold", 0.05, 1.00, st.session_state.get("confidence_threshold", 0.10), 0.05)
   st.session_state["search_mode"] = st.sidebar.checkbox("Enable Search Mode")
   if st.session_state["search_mode"]:
     st.session_state["search_object"] = st.sidebar.text_input("Search Object", placeholder="e.g., Bottle")
@@ -968,17 +1002,23 @@ if page == "Settings":
   
   st.sidebar.markdown("---")
   st.sidebar.markdown("#### Benchmarking")
-  st.session_state["adaptive_mode"] = st.sidebar.toggle(" Adaptive SmartVision Mode", value=st.session_state.get("adaptive_mode", True), help="Toggle to compare Adaptive AI vs Conventional YOLO")
+  st.session_state["adaptive_mode"] = st.sidebar.toggle("Adaptive SmartVision Mode", value=st.session_state.get("adaptive_mode", True), help="Toggle to compare Adaptive AI vs Conventional YOLO")
   
   st.sidebar.markdown("---")
   st.sidebar.markdown("#### Restricted Area")
   st.session_state["enable_restricted"] = st.sidebar.toggle("Enable Restricted Area", value=st.session_state.get("enable_restricted", False))
 
-st.sidebar.markdown("""
+try:
+  import ultralytics as _ultralytics
+  _ultralytics_version = _ultralytics.__version__
+except Exception:
+  _ultralytics_version = "Unavailable"
+_model_file = os.path.basename(str(getattr(det_model, "ckpt_path", "") or "")) or "Unavailable"
+st.sidebar.markdown(f"""
 <div class="model-info-card">
-  <div style="color: #22c55e; margin-bottom: 10px; font-weight: bold;">Model Info</div>
-  <div class="model-info-row"><span class="model-info-label">Model</span><span class="model-info-val">YOLOv8</span></div>
-  <div class="model-info-row"><span class="model-info-label">Version</span><span class="model-info-val">8.1.0</span></div>
+  <div class="model-info-title">{ui_icon("memory")} Model Info</div>
+  <div class="model-info-row"><span class="model-info-label">Model</span><span class="model-info-val">{escape(_model_file)}</span></div>
+  <div class="model-info-row"><span class="model-info-label">Ultralytics</span><span class="model-info-val">{escape(_ultralytics_version)}</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -993,7 +1033,7 @@ if page == "Voice Assistant":
     <section class="assistant-hero">
       <div class="assistant-hero-copy">
         <div class="assistant-eyebrow">SmartVision Voice Assistant</div>
-        <h1>Hi there! 👋</h1>
+        <h1>Hi there!</h1>
         <p>{greeting}! What can I help you with today? Ask about what's in your image,
         explain the latest results, or learn how any SmartVision feature works.</p>
       </div>
@@ -1014,9 +1054,9 @@ if page == "Voice Assistant":
   prompt_cols = st.columns(3)
   quick_question = None
   prompt_examples = (
-    ("👁️  What do you see?", "What do you see in this image?"),
-    ("✨  Explain the results", "Explain the scenario in this input"),
-    ("💡  App features", "What features does this application have?"),
+    (":material/visibility: What do you see?", "What do you see in this image?"),
+    (":material/insights: Explain the results", "Explain the scenario in this input"),
+    (":material/help: App features", "What features does this application have?"),
   )
   for prompt_index, (prompt_col, (label, question)) in enumerate(zip(prompt_cols, prompt_examples)):
     with prompt_col:
@@ -1055,7 +1095,7 @@ if page == "Voice Assistant":
     )
   if st.session_state.get("voice_response"):
     if st.session_state.get("voice_status") == "error":
-      st.error(st.session_state["voice_response"], icon="⚠️")
+      st.error(st.session_state["voice_response"], icon=":material/error:")
     else:
       st.markdown(
         f'<div class="assistant-card"><div class="assistant-card-label">SmartVision says</div>'
@@ -1079,29 +1119,43 @@ if page == "Voice Assistant":
 # HOME PAGE (Dashboard)
 # HOME PAGE (Dashboard)
 if page in ["Dashboard", "Home"]:
-  perf_stats = st.session_state["performance_monitor"].get_stats()
-  fps = perf_stats['fps'] if perf_stats else 0.0
-  
-  hdr_c1, hdr_c2, hdr_c3, hdr_c4, hdr_c5 = st.columns([2.7, 0.9, 0.65, 1, 1.1])
+  if "live_detection_running" not in st.session_state:
+    # Detection runs on every new camera snapshot / uploaded image (the
+    # page's original behaviour); Stop Detection pauses it.
+    st.session_state["live_detection_running"] = True
+
+  hdr_c1, hdr_c2, hdr_c3, hdr_c4, hdr_c5 = st.columns([2.6, 1, 0.8, 1, 1.3], vertical_alignment="center")
   with hdr_c1:
-    st.markdown("<div class='section-title'>Live Detection</div><div class='sub-text' style='margin-bottom:20px;'>Real-time object detection and tracking</div>", unsafe_allow_html=True)
-  with hdr_c2:
-    st.markdown("<div style='font-size:12px; color:#64748b;'>System Status</div><div style='color:#10b981; font-weight:bold;'>Active</div>", unsafe_allow_html=True)
-  with hdr_c3:
-    st.markdown(f"<div style='font-size:12px; color:#64748b;'>FPS</div><div style='font-weight:bold;'>{fps:.1f}</div>", unsafe_allow_html=True)
-  with hdr_c4:
-    st.markdown("<div style='font-size:12px; color:#64748b;'>Resolution</div><div style='font-weight:bold;'>1280 x 720</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>Live Detection</div><div class='sub-text' style='margin-bottom:12px;'>Real-time object detection and tracking</div>", unsafe_allow_html=True)
+  status_slot = hdr_c2.empty()
+  fps_slot = hdr_c3.empty()
+  resolution_slot = hdr_c4.empty()
   with hdr_c5:
-    input_type = st.selectbox("Input Source", ["Camera 1", "Upload Image"], label_visibility="collapsed")
-    
+    input_type = st.selectbox("Input source", ["Camera 1", "Upload Image"], key="dashboard_input_source")
+
   col_main, col_side = st.columns([2.5, 1])
-  
+
   img_cv = None
   detected_objects_with_conf = []
   object_counts = {}
   total_detections = 0
-  accuracy = 0.0
-  
+  inference_time = None
+  camera_error = None
+
+  # Right column: result placeholders first, then the settings, so the
+  # slider values are known before detection runs.
+  with col_side:
+    kpi_slot = st.empty()
+    with st.container(border=True, key="dashboard_detected_objects"):
+      st.markdown(f"<div class='dashboard-panel-title'>{ui_icon('list_alt')} Detected Objects</div>", unsafe_allow_html=True)
+      objects_slot = st.empty()
+    with st.container(border=True, key="dashboard_detection_settings"):
+      st.markdown(f"<div class='dashboard-panel-title'>{ui_icon('tune')} Detection Settings</div>", unsafe_allow_html=True)
+      conf_val = st.slider("Confidence Threshold", 0.0, 1.0, 0.5, key="dashboard_conf")
+      st.session_state["confidence_threshold"] = conf_val
+      iou_val = st.slider("IoU Threshold", 0.0, 1.0, 0.45, key="dashboard_iou")
+      max_det = st.slider("Max Detections", 1, 100, 20, key="dashboard_max_det")
+
   with col_main:
     video_placeholder = st.empty()
 
@@ -1109,25 +1163,42 @@ if page in ["Dashboard", "Home"]:
       file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"], label_visibility="collapsed")
       if file:
         from PIL import Image, ImageOps
-        pil = Image.open(file)
-        pil = ImageOps.exif_transpose(pil)
-        img_cv = cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR)
+        try:
+          pil = Image.open(file)
+          pil = ImageOps.exif_transpose(pil)
+          img_cv = cv2.cvtColor(np.array(pil.convert("RGB")), cv2.COLOR_RGB2BGR)
+        except Exception as image_error:
+          st.error(f"This file could not be opened as an image: {image_error}", icon=":material/broken_image:")
     else:
-      snap = st.camera_input("Live Feed", label_visibility="collapsed")
+      snap = st.camera_input("Live Feed", label_visibility="collapsed", key="dashboard_camera")
       if snap:
         from PIL import Image, ImageOps
-        pil = Image.open(snap)
-        pil = ImageOps.exif_transpose(pil)
-        img_cv = cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR)
+        try:
+          pil = Image.open(snap)
+          pil = ImageOps.exif_transpose(pil)
+          img_cv = cv2.cvtColor(np.array(pil.convert("RGB")), cv2.COLOR_RGB2BGR)
+        except Exception as image_error:
+          camera_error = f"The camera returned a frame that could not be read: {image_error}"
+      else:
+        st.markdown(
+          f"<div class='camera-help'>{ui_icon('info')}<div><b>Camera preview black or blocked?</b> "
+          "Allow camera access for this site in the browser's address bar, close other apps "
+          "that are using the camera, and open the website on <code>http://localhost</code> or "
+          "<code>https</code>, because browsers block cameras on other plain-http addresses. "
+          "You can also switch <b>Input source</b> to <b>Upload Image</b>.</div></div>",
+          unsafe_allow_html=True,
+        )
+    if camera_error:
+      st.error(camera_error, icon=":material/videocam_off:")
 
     if img_cv is None:
       video_placeholder.markdown(
-        "<div class='dashboard-empty-state'><span aria-hidden='true'>◉</span>"
-        "<span>Upload an image or start the webcam to begin detection.</span></div>",
+        f"<div class='dashboard-empty-state'>{ui_icon('photo_camera')}"
+        "<span>Upload an image or take a photo with the webcam to begin detection.</span></div>",
         unsafe_allow_html=True,
       )
     else:
-      rot_col, flip_col = st.columns([2, 1])
+      rot_col, flip_col = st.columns([2, 1], vertical_alignment="bottom")
       with rot_col:
         od_rot = st.selectbox("Media Rotation", ["0° (Upright)", "90° Clockwise", "180° Inverted", "270° Counter-Clockwise"], index=0, key="od_rot_select")
       with flip_col:
@@ -1141,22 +1212,34 @@ if page in ["Dashboard", "Home"]:
       if od_flip:
         img_cv = cv2.flip(img_cv, 1)
 
-    button_row_one = st.columns(3)
-    for button_column, label, primary in zip(
-      button_row_one,
-      ("Start Detection", "Stop Detection", "Capture"),
-      (True, False, False),
-    ):
-      with button_column:
-        st.button(label, type="primary" if primary else "secondary", width="stretch")
-
-    button_row_two = st.columns(2)
-    for button_column, label in zip(button_row_two, ("Record", "Fullscreen")):
-      with button_column:
-        st.button(label, type="secondary", width="stretch")
+    with st.container(key="dashboard_actions"):
+      action_cols = st.columns(3)
+      with action_cols[0]:
+        if st.button("Start Detection", icon=":material/play_arrow:", type="primary", width="stretch",
+                     disabled=st.session_state["live_detection_running"],
+                     help="Run detection on each new photo or uploaded image."):
+          st.session_state["live_detection_running"] = True
+          st.rerun()
+      with action_cols[1]:
+        if st.button("Stop Detection", icon=":material/stop:", width="stretch",
+                     disabled=not st.session_state["live_detection_running"],
+                     help="Pause detection. New photos are shown without boxes."):
+          st.session_state["live_detection_running"] = False
+          st.rerun()
+      with action_cols[2]:
+        capture_clicked = st.button("Capture", icon=":material/photo_camera:", width="stretch",
+                                    disabled=img_cv is None,
+                                    help="Save the current (annotated) result to the detections folder.")
+      extra_cols = st.columns(2)
+      with extra_cols[0]:
+        st.button("Record", icon=":material/fiber_manual_record:", width="stretch", disabled=True,
+                  help="Not available here: this page analyses single photos, not a continuous video stream.")
+      with extra_cols[1]:
+        st.button("Fullscreen", icon=":material/fullscreen:", width="stretch", disabled=True,
+                  help="Hover over the result image and use its expand button to view it full screen.")
 
     st.markdown(
-      "<div class='dashboard-recent-heading'><b>Recent Detections</b>"
+      f"<div class='dashboard-recent-heading'><b>{ui_icon('history')} Recent Detections</b>"
       "<span>Latest from detection history</span></div>",
       unsafe_allow_html=True,
     )
@@ -1170,32 +1253,39 @@ if page in ["Dashboard", "Home"]:
     for col, item in zip(recent_cols, recent_history):
       with col:
         obj_name = str(item.get("object_name", "Unknown")).title()
-        conf_val = float(item.get("confidence", 0.90))
-        t_str = str(item.get("time", "Recent"))
-        confidence_pct = max(0, min(100, round(conf_val * 100)))
+        conf_val_item = item.get("confidence")
+        t_str = str(item.get("time", ""))
+        confidence_pct = None if conf_val_item is None else max(0, min(100, round(float(conf_val_item) * 100)))
+        confidence_label = "Confidence unavailable" if confidence_pct is None else f"{confidence_pct}% confidence"
         st.markdown(f"""
         <div class="dashboard-recent-card">
           <div class="dashboard-recent-object">{escape(obj_name)}</div>
-          <div class="dashboard-recent-meta"><span>{confidence_pct}% confidence</span><span>{escape(t_str)}</span></div>
-          <div class="dashboard-confidence-track"><span style="width:{confidence_pct}%;"></span></div>
+          <div class="dashboard-recent-meta"><span>{confidence_label}</span><span>{escape(t_str)}</span></div>
+          <div class="dashboard-confidence-track"><span style="width:{confidence_pct or 0}%;"></span></div>
         </div>
         """, unsafe_allow_html=True)
 
     if not recent_history:
       st.markdown(
-        "<div class='dashboard-empty-state'><span aria-hidden='true'>◌</span>"
+        f"<div class='dashboard-empty-state'>{ui_icon('inbox')}"
         "<span>No recent detections yet</span></div>",
         unsafe_allow_html=True,
       )
 
-  if img_cv is not None:
+  if img_cv is not None and st.session_state["live_detection_running"]:
     start_time = time.time()
-    results = det_model.predict(img_cv, conf=st.session_state["confidence_threshold"], agnostic_nms=False, verbose=False)
+    results = det_model.predict(
+      img_cv,
+      conf=st.session_state["confidence_threshold"],
+      iou=iou_val,
+      max_det=int(max_det),
+      agnostic_nms=False,
+      verbose=False,
+    )
     inference_time = time.time() - start_time
     st.session_state["performance_monitor"].record_inference(inference_time)
-    
+
     detected_img = results[0].plot()
-    results_list = []
     for result in results:
       if result.boxes is not None:
         for box in result.boxes:
@@ -1218,56 +1308,83 @@ if page in ["Dashboard", "Home"]:
       pass
     if total_detections > 0 and st.session_state.get("siren_on_detection", True):
       play_siren_sound()
-          
-    # Replace the placeholder with the processed image
-    video_placeholder.image(cv2.cvtColor(detected_img, cv2.COLOR_BGR2RGB), use_container_width=True)
 
-  with col_side:
-    st.markdown(f"""
-      <div class='kpi-card'>
-        <div>
-          <div style='font-size:13px; font-weight:600;'>Real-time Detections</div>
-          <div style='font-size:36px; font-weight:700; line-height:1.2;'>{total_detections}</div>
-          <div style='font-size:12px; color:#10b981; font-weight:500;'>Objects detected</div>
-        </div>
-        <div style='width:60px; height:60px; border-radius:50%; border:2px dashed #10b981; display:flex; align-items:center; justify-content:center;'>
-          <div style='width:30px; height:30px; border-radius:50%; background-color:rgba(16,185,129,0.2);'></div>
-        </div>
+    result_rgb = cv2.cvtColor(detected_img, cv2.COLOR_BGR2RGB)
+    video_placeholder.image(result_rgb, use_container_width=True)
+  elif img_cv is not None:
+    result_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+    video_placeholder.image(result_rgb, use_container_width=True,
+                            caption="Detection is stopped. Press Start Detection to analyse this image.")
+  else:
+    result_rgb = None
+
+  if img_cv is not None and capture_clicked:
+    try:
+      capture_dir = st.session_state.get("detections_dir", "detections")
+      os.makedirs(capture_dir, exist_ok=True)
+      capture_path = os.path.join(capture_dir, f"capture_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
+      cv2.imwrite(capture_path, cv2.cvtColor(result_rgb, cv2.COLOR_RGB2BGR))
+      st.toast(f"Saved {capture_path}", icon=":material/check_circle:")
+    except Exception as capture_error:
+      st.error(f"Could not save the capture: {capture_error}", icon=":material/error:")
+
+  # Header status — only real, measured values.
+  if not st.session_state["live_detection_running"]:
+    status_text, status_class = "Stopped", "is-warn"
+  elif camera_error:
+    status_text, status_class = "Camera error", "is-warn"
+  elif img_cv is None:
+    status_text, status_class = "Waiting for input", "is-muted"
+  else:
+    status_text, status_class = "Running", "is-ok"
+  status_slot.markdown(
+    f"<div class='sv-label'>System Status</div><div class='sv-value {status_class}'>{status_text}</div>",
+    unsafe_allow_html=True,
+  )
+  fps_text = f"{1.0 / inference_time:.1f}" if inference_time else "—"
+  fps_slot.markdown(
+    f"<div class='sv-label' title='Model throughput measured from the last inference'>FPS</div>"
+    f"<div class='sv-value{'' if inference_time else ' is-muted'}'>{fps_text}</div>",
+    unsafe_allow_html=True,
+  )
+  resolution_text = f"{img_cv.shape[1]} × {img_cv.shape[0]}" if img_cv is not None else "—"
+  resolution_slot.markdown(
+    f"<div class='sv-label'>Resolution</div>"
+    f"<div class='sv-value{'' if img_cv is not None else ' is-muted'}'>{resolution_text}</div>",
+    unsafe_allow_html=True,
+  )
+
+  kpi_slot.markdown(f"""
+    <div class='kpi-card'>
+      <div>
+        <div class='dashboard-panel-title'>Real-time Detections</div>
+        <div class='kpi-number'>{total_detections}</div>
+        <div class='sv-text-success' style='font-size:13px; font-weight:600;'>Objects detected</div>
       </div>
-      """, unsafe_allow_html=True)
+      <div class='kpi-ring'>{ui_icon('center_focus_strong')}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with st.container(border=True):
-      st.markdown("<b style='font-size:14px;'>Detected Objects</b>", unsafe_allow_html=True)
-      if total_detections > 0:
-        for obj_name, count in object_counts.items():
-          pct = (count / total_detections) * 100
-          st.markdown(f"""
-          <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:13px;'>
-            <div style='font-weight:500;'>{escape(obj_name)}</div>
-            <div style='display:flex; gap:15px;'>
-              <span style='font-weight:600; width:15px;'>{count}</span>
-              <span>{pct:.1f}%</span>
-            </div>
-          </div>
-          """, unsafe_allow_html=True)
-      else:
-        st.markdown(
-          "<div class='dashboard-empty-state'><span aria-hidden='true'>◌</span>"
-          "<span>No objects detected yet</span></div>",
-          unsafe_allow_html=True,
-        )
-
-    with st.container(border=True):
-      st.markdown("<b style='font-size:14px; display:block; margin-bottom:15px;'>Detection Settings</b>", unsafe_allow_html=True)
-      conf_val = st.slider("Confidence Threshold", 0.0, 1.0, 0.5, label_visibility="visible")
-      st.session_state["confidence_threshold"] = conf_val
-      iou_val = st.slider("IoU Threshold", 0.0, 1.0, 0.45)
-      max_det = st.slider("Max Detections", 1, 100, 20)
+  if total_detections > 0:
+    rows = []
+    for obj_name, count in object_counts.items():
+      pct = (count / total_detections) * 100
+      rows.append(
+        f"<div class='detected-row'><span class='detected-name'>{escape(obj_name)}</span>"
+        f"<span class='detected-count'>{count}</span><span class='detected-pct'>{pct:.1f}%</span></div>"
+      )
+    objects_slot.markdown("".join(rows), unsafe_allow_html=True)
+  else:
+    objects_slot.markdown(
+      f"<div class='dashboard-empty-state'>{ui_icon('search_off')}"
+      f"<span>{'No objects detected in this image' if inference_time else 'No objects detected yet'}</span></div>",
+      unsafe_allow_html=True,
+    )
 
 
 # VIDEO FAST REVIEW
 elif page == "Video Fast Review":
-  st.markdown("<div class='section-title'> Video Fast Review</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Video Fast Review</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Upload a video and automatically find exactly when a specific object or person appears.</div>", unsafe_allow_html=True)
   
   col1, col2 = st.columns([3, 1])
@@ -1630,7 +1747,7 @@ elif page == "Video Fast Review":
 
 # DROWSINESS MONITOR
 elif page == "Drowsiness Monitor":
-  st.markdown("<div class='section-title'> Drowsiness Monitor</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Drowsiness Monitor</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Analyze a video for signs of drowsiness or fatigue based on eye closure.</div>", unsafe_allow_html=True)
   
   col1, col2 = st.columns([3, 1])
@@ -1729,7 +1846,7 @@ elif page == "Drowsiness Monitor":
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
         results = face_mesh.detect(mp_image)
         
-        status = "🟢 Awake"
+        status = "Awake"
         color = (0, 255, 0)
         
         if results.face_landmarks:
@@ -1746,7 +1863,7 @@ elif page == "Drowsiness Monitor":
             if ear < ear_threshold:
               counter += 1
               if counter >= consec_frames:
-                status = " DROWSY ALERT!"
+                status = "DROWSY ALERT!"
                 color = (255, 0, 0)
                 if counter == consec_frames:
                   drowsy_incidents += 1
@@ -1846,10 +1963,10 @@ elif page == "Vision Chatbot":
 
 # FACE REGISTRATION
 elif page == "Face Registration":
-  st.markdown("<div class='section-title'> Face Registration</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Face Registration</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Register faces so the AI can recognize them by name</div>", unsafe_allow_html=True)
   
-  tab_reg, tab_test = st.tabs(["➕ Register Face", "🔍 Test / Verify Face"])
+  tab_reg, tab_test = st.tabs([":material/person_add: Register Face", ":material/how_to_reg: Test / Verify Face"])
   
   with tab_reg:
     col1, col2 = st.columns(2)
@@ -1933,23 +2050,23 @@ elif page == "Face Registration":
 # OBJECT DETECTION 
 
 elif page == "Object Detection":
-  st.markdown("<div class='section-title'> Object Detection</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Object Detection</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Upload or capture an image for YOLO detection</div>", unsafe_allow_html=True)
   
   # Video Recording Controls
   recorder = get_video_recorder()
   rec_col1, rec_col2, rec_col3 = st.columns(3)
   with rec_col1:
-    if st.button(" Start Recording", disabled=recorder.is_recording()):
+    if st.button("Start Recording", icon=":material/fiber_manual_record:", disabled=recorder.is_recording()):
       recorder.start_recording(frame_size=(640, 480), fps=30)
       st.success("Recording started!")
   with rec_col2:
-    if st.button(" Stop Recording", disabled=not recorder.is_recording()):
+    if st.button("Stop Recording", icon=":material/stop:", disabled=not recorder.is_recording()):
       saved_file = recorder.stop_recording()
       if saved_file:
         st.success(f"Recording saved: {saved_file}")
   with rec_col3:
-    if st.button(" Cancel Recording", disabled=not recorder.is_recording()):
+    if st.button("Cancel Recording", icon=":material/close:", disabled=not recorder.is_recording()):
       recorder.cancel_recording()
       st.warning("Recording cancelled")
   
@@ -1961,7 +2078,7 @@ elif page == "Object Detection":
     model_choice = st.selectbox(
       "Detection Engine",
       [
-        "🌟 Detect Everything in Frame (Automatic All-Object Vision)",
+        "Detect Everything in Frame (Automatic All-Object Vision)",
         "High Accuracy (YOLOv8m)",
         "Fast Edge (YOLOv8n)"
       ],
@@ -1997,22 +2114,22 @@ elif page == "Object Detection":
     with view_c2:
       od_view_size = st.radio(
         "Display Size",
-        ["🔍 Enlarged Output (Split)", "🖥️ Full Width (Maximum)"],
+        ["Enlarged Output (Split)", "Full Width (Maximum)"],
         index=0,
         horizontal=True,
         key="od_size_mode",
         label_visibility="collapsed"
       )
 
-    if od_view_size == "🖥️ Full Width (Maximum)":
+    if od_view_size == "Full Width (Maximum)":
       col1 = None
       col2 = None
-      with st.expander("📷 View Original Input Image Preview", expanded=False):
+      with st.expander("View Original Input Image Preview", icon=":material/image:", expanded=False):
         st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), width=360)
     else:
       col1, col2 = st.columns([1, 2.5])
       with col1:
-        st.markdown("<div class='card-box'><b> Input Image</b></div>", unsafe_allow_html=True)
+        st.markdown("<div class='card-box'><b>Input Image</b></div>", unsafe_allow_html=True)
         st.image(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB), use_container_width=True)
 
     # Select active detector
@@ -2115,7 +2232,7 @@ elif page == "Object Detection":
 
     # Dangerous Object Alert
     if found_dangerous:
-      st.error("🚨 DANGEROUS OBJECT DETECTED!")
+      st.error("DANGEROUS OBJECT DETECTED!", icon=":material/warning:")
       play_siren_sound(force=True)
 
       if st.session_state["voice_enabled"]:
@@ -2158,7 +2275,7 @@ elif page == "Object Detection":
           voice_assistant = get_voice_assistant()
           voice_assistant.speak(f"{st.session_state['search_object']} found.")
       else:
-        st.info(" Searching...")
+        st.info("Searching...", icon=":material/search:")
     
     # Object Counter
     if detected_objects_with_conf:
@@ -2187,12 +2304,12 @@ elif page == "Object Detection":
     # Screenshot Capture & Enlarged Result Display
     if col2 is not None:
       with col2:
-        st.markdown("<div class='card-box'><b style='font-size:16px;'> Detection Result</b></div>", unsafe_allow_html=True)
+        st.markdown("<div class='card-box'><b style='font-size:16px;'>Detection Result</b></div>", unsafe_allow_html=True)
         st.image(cv2.cvtColor(detected_img, cv2.COLOR_BGR2RGB), use_container_width=True)
         
         if detected_objects_with_conf:
           badges = " ".join([
-            f"<span style='background:#10b981; color:white; padding:4px 12px; border-radius:14px; font-size:13px; font-weight:600; display:inline-block; margin-right:6px; margin-bottom:6px;'>{obj.upper()} ({conf*100:.1f}%)</span>"
+            f"<span style='background:var(--success); color:var(--on-primary); padding:4px 12px; border-radius:14px; font-size:13px; font-weight:600; display:inline-block; margin-right:6px; margin-bottom:6px;'>{obj.upper()} ({conf*100:.1f}%)</span>"
             for obj, conf in detected_objects_with_conf
           ])
           st.markdown(f"<div style='margin-top:10px; margin-bottom:10px;'>{badges}</div>", unsafe_allow_html=True)
@@ -2203,7 +2320,7 @@ elif page == "Object Detection":
         if recorder.is_recording():
           recorder.add_annotated_frame(detected_img, detections_for_recording)
         
-        if st.button(" Save Detection", key="btn_save_split"):
+        if st.button("Save Detection", icon=":material/save:", key="btn_save_split"):
           timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
           filename = f"detection_{timestamp}.jpg"
           filepath = os.path.join(st.session_state["detections_dir"], filename)
@@ -2215,12 +2332,12 @@ elif page == "Object Detection":
             db.add_detection(obj, conf, filepath)
     else:
       # Full Width Maximum mode
-      st.markdown("<div class='card-box'><b style='font-size:18px;'> Detection Result (Full Width Maximized)</b></div>", unsafe_allow_html=True)
+      st.markdown("<div class='card-box'><b style='font-size:18px;'>Detection Result (Full Width Maximized)</b></div>", unsafe_allow_html=True)
       st.image(cv2.cvtColor(detected_img, cv2.COLOR_BGR2RGB), use_container_width=True)
       
       if detected_objects_with_conf:
         badges = " ".join([
-          f"<span style='background:#10b981; color:white; padding:4px 12px; border-radius:14px; font-size:13px; font-weight:600; display:inline-block; margin-right:6px; margin-bottom:6px;'>{obj.upper()} ({conf*100:.1f}%)</span>"
+          f"<span style='background:var(--success); color:var(--on-primary); padding:4px 12px; border-radius:14px; font-size:13px; font-weight:600; display:inline-block; margin-right:6px; margin-bottom:6px;'>{obj.upper()} ({conf*100:.1f}%)</span>"
           for obj, conf in detected_objects_with_conf
         ])
         st.markdown(f"<div style='margin-top:10px; margin-bottom:10px;'>{badges}</div>", unsafe_allow_html=True)
@@ -2231,7 +2348,7 @@ elif page == "Object Detection":
       if recorder.is_recording():
         recorder.add_annotated_frame(detected_img, detections_for_recording)
       
-      if st.button(" Save Detection", key="btn_save_full"):
+      if st.button("Save Detection", icon=":material/save:", key="btn_save_full"):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"detection_{timestamp}.jpg"
         filepath = os.path.join(st.session_state["detections_dir"], filename)
@@ -2258,23 +2375,23 @@ elif page == "Object Detection":
 # HISTORY PAGE
 
 elif page == "History":
-  st.markdown("<div class='section-title'> Detection History</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Detection History</div>", unsafe_allow_html=True)
   
   db = get_database()
   
   # Search
-  search_query = st.text_input(" Search history", placeholder="Search by object name...")
+  search_query = st.text_input("Search history", placeholder="Search by object name...")
   
   # Actions
   col1, col2, col3 = st.columns(3)
   with col1:
-    if st.button(" Clear All History"):
+    if st.button("Clear All History", icon=":material/delete:"):
       count = db.clear_all_detections()
       st.success(f"Cleared {count} records")
       st.rerun()
   
   with col2:
-    if st.button(" Refresh"):
+    if st.button("Refresh", icon=":material/refresh:"):
       st.rerun()
   
   # Display History
@@ -2305,7 +2422,7 @@ elif page == "History":
 # OCR PAGE
 
 elif page == "OCR":
-  st.markdown("<div class='section-title'> OCR - Text Extraction</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>OCR - Text Extraction</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Extract text from documents using local EasyOCR (No API Key Required)</div>", unsafe_allow_html=True)
   
   ocr_reader = OCRReader()
@@ -2360,14 +2477,14 @@ elif page == "OCR":
     col1, col2 = st.columns(2)
     
     with col1:
-      st.markdown("<div class='card-box'><b> Input Media</b></div>", unsafe_allow_html=True)
+      st.markdown("<div class='card-box'><b>Input Media</b></div>", unsafe_allow_html=True)
       if video_file:
           st.video(video_file)
       else:
           st.image(img, use_container_width=True)
     
     with col2:
-      st.markdown("<div class='card-box'><b> Extracted Text</b></div>", unsafe_allow_html=True)
+      st.markdown("<div class='card-box'><b>Extracted Text</b></div>", unsafe_allow_html=True)
       
       if st.button("Extract Text", width="stretch"):
         with st.spinner("Extracting text locally with auto-orientation..."):
@@ -2474,19 +2591,19 @@ elif page == "OCR":
 # RESEARCH EVALUATION PAGE
 
 elif page == "Research Evaluation":
-  st.markdown("<div class='section-title'> Research Evaluation</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Research Evaluation</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Comparative Analysis: Baseline YOLOv8 vs. Proposed Smart Vision Architecture</div>", unsafe_allow_html=True)
   
   col1, col2, col3 = st.columns(3)
   
   with col1:
-    st.markdown("<div class='kpi-card'><div class='kpi-label'>mAP (Accuracy)</div><div class='kpi-value' style='color:#3b82f6;'>+14.2%</div><div style='font-size:12px; color:#64748b; margin-top:5px;'>Baseline: 68.5% | Proposed: 82.7%</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='kpi-card'><div class='kpi-label'>mAP (Accuracy)</div><div class='kpi-value' style='color:var(--primary);'>+14.2%</div><div style='font-size:12px; color:var(--muted); margin-top:5px;'>Baseline: 68.5% | Proposed: 82.7%</div></div>", unsafe_allow_html=True)
   
   with col2:
-    st.markdown("<div class='kpi-card'><div class='kpi-label'>Avg Latency</div><div class='kpi-value' style='color:#22c55e;'>-22ms</div><div style='font-size:12px; color:#64748b; margin-top:5px;'>Baseline: 54ms | Proposed: 32ms</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='kpi-card'><div class='kpi-label'>Avg Latency</div><div class='kpi-value' style='color:var(--success);'>-22ms</div><div style='font-size:12px; color:var(--muted); margin-top:5px;'>Baseline: 54ms | Proposed: 32ms</div></div>", unsafe_allow_html=True)
     
   with col3:
-    st.markdown("<div class='kpi-card'><div class='kpi-label'>Battery Usage</div><div class='kpi-value' style='color:#22c55e;'>-18%</div><div style='font-size:12px; color:#64748b; margin-top:5px;'>Adaptive Edge-AI Scaling</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='kpi-card'><div class='kpi-label'>Battery Usage</div><div class='kpi-value' style='color:var(--success);'>-18%</div><div style='font-size:12px; color:var(--muted); margin-top:5px;'>Adaptive Edge-AI Scaling</div></div>", unsafe_allow_html=True)
 
   st.markdown("---")
   
@@ -2516,8 +2633,8 @@ elif page == "Research Evaluation":
 
   st.markdown("""
   <div class='card-box' style='margin-top:20px;'>
-    <b style='color:#0f172a;'>Research Conclusions</b>
-    <ul style='color:#334155; margin-top:10px;'>
+    <b style='color:var(--text);'>Research Conclusions</b>
+    <ul style='color:var(--muted); margin-top:10px;'>
       <li><b>Adaptive Edge-AI Engine</b> successfully stabilizes FPS during high scene complexity by dynamically scaling resolution.</li>
       <li><b>Low-Light Enhancer</b> (CLAHE) dramatically improves Precision and Recall in poor lighting conditions (+19% mAP).</li>
       <li><b>Smart Decision Engine</b> filtering reduces false positives, resulting in a significantly cleaner tracking history.</li>
@@ -2529,7 +2646,7 @@ elif page == "Research Evaluation":
 # SETTINGS PAGE
 
 elif page == "Settings":
-  st.markdown("<div class='section-title'> Settings</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Settings</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Configure system preferences and alerts</div>", unsafe_allow_html=True)
   
   st.markdown("### Alerts Configuration")
@@ -2537,7 +2654,7 @@ elif page == "Settings":
   
   with col1:
     st.markdown("<div class='card-box'>", unsafe_allow_html=True)
-    st.markdown("** Email Alerts**")
+    st.markdown("**:material/mail: Email Alerts**")
     st.session_state["email_alerts_enabled"] = st.toggle("Enable Email Alerts", value=st.session_state.get("email_alerts_enabled", False))
     if st.session_state["email_alerts_enabled"]:
       st.session_state["email_configured"] = st.checkbox("Email is configured (Mock)", value=st.session_state.get("email_configured", False))
@@ -2545,7 +2662,7 @@ elif page == "Settings":
     
   with col2:
     st.markdown("<div class='card-box'>", unsafe_allow_html=True)
-    st.markdown("** Telegram Alerts**")
+    st.markdown("**:material/send: Telegram Alerts**")
     st.session_state["telegram_alerts_enabled"] = st.toggle("Enable Telegram Alerts", value=st.session_state.get("telegram_alerts_enabled", False))
     if st.session_state["telegram_alerts_enabled"]:
       st.session_state["telegram_configured"] = st.checkbox("Telegram is configured (Mock)", value=st.session_state.get("telegram_configured", False))
@@ -2555,9 +2672,14 @@ elif page == "Settings":
   st.markdown("### General Preferences")
   st.info("Use the sidebar on this page to adjust other settings like Voice Assistant, Confidence Threshold, and Search Mode.")
 
+# MEET THE BUILDERS (profiles from assets/builders/builders.json)
+elif page == "Meet the Builders":
+  from ui.builders import render_builders_page
+  render_builders_page()
+
 # AUTOML & DATASET PIPELINE (STORAGE & DATASET REPOSITORY - USER VIEW ONLY)
 elif page == "AutoML & Dataset Pipeline":
-  st.markdown("<div class='section-title'>📊 Storage & Dataset Repository</div>", unsafe_allow_html=True)
+  st.markdown("<div class='section-title'>Storage &amp; Dataset Repository</div>", unsafe_allow_html=True)
   st.markdown("<div class='sub-text'>Read-only dashboard monitoring system disk allocation, dataset splits, and cataloged training assets.</div>", unsafe_allow_html=True)
 
   import shutil
@@ -2605,14 +2727,14 @@ elif page == "AutoML & Dataset Pipeline":
   # Storage Progress Bar
   st.markdown("<b>Local Disk Storage Allocation</b>", unsafe_allow_html=True)
   st.progress(min(1.0, max(0.0, used_pct / 100.0)))
-  st.caption(f"💾 Total Capacity: {total_gb:.1f} GB | Used: {used_gb:.1f} GB ({used_pct:.1f}%) | Free Available: {free_gb:.1f} GB")
+  st.caption(f"Total Capacity: {total_gb:.1f} GB | Used: {used_gb:.1f} GB ({used_pct:.1f}%) | Free Available: {free_gb:.1f} GB")
 
   st.markdown("---")
 
   # Split Breakdown & Inventory
   col_split, col_status = st.columns([1, 1.2])
   with col_split:
-    st.markdown("### 📁 Dataset Split Distribution")
+    st.markdown("### :material/pie_chart: Dataset Split Distribution")
     split_df = pd.DataFrame({
       "Dataset Split": ["Training (train)", "Validation (val)", "Unseen Test (test)"],
       "Image Count": [train_count, val_count, test_count],
@@ -2622,7 +2744,7 @@ elif page == "AutoML & Dataset Pipeline":
     st.dataframe(split_df, use_container_width=True, hide_index=True)
 
   with col_status:
-    st.markdown("### 🗄️ Dataset Source Inventory")
+    st.markdown("### :material/inventory_2: Dataset Source Inventory")
     manifest_path = "datasets/manifest.json"
     datasets_dict = {}
     if os.path.exists(manifest_path):
@@ -2647,7 +2769,7 @@ elif page == "AutoML & Dataset Pipeline":
       st.dataframe(df_ds, use_container_width=True, hide_index=True)
 
   st.markdown("---")
-  st.markdown("### 🏷️ Active Target Object Categories (COCO 80)")
+  st.markdown("### :material/label: Active Target Object Categories (COCO 80)")
   if os.path.exists(data_yaml_path):
     try:
       with open(data_yaml_path) as yf:
@@ -2655,7 +2777,7 @@ elif page == "AutoML & Dataset Pipeline":
         names = y_data.get("names", [])
         if names:
           badges = " ".join([
-            f"<span style='background:#f1f5f9; color:#0f172a; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:500; display:inline-block; margin:3px; border:1px solid #cbd5e1;'>{n}</span>"
+            f"<span style='background:var(--surface-raised); color:var(--text); padding:4px 10px; border-radius:8px; font-size:12px; font-weight:500; display:inline-block; margin:3px; border:1px solid var(--border);'>{n}</span>"
             for n in names
           ])
           st.markdown(f"<div style='line-height:1.8;'>{badges}</div>", unsafe_allow_html=True)

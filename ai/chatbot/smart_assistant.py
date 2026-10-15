@@ -523,6 +523,30 @@ class SmartVisionAssistant:
         scene_context = self._build_scene_context(context_detections, ocr_text, counts)
         response = None
 
+        # Application knowledge (retrieval over knowledge/smartvision_knowledge.md).
+        # The LLM is not fine-tuned; retrieved guide sections are provided as
+        # context, or returned directly when no LLM key is configured.
+        kb_hits = []
+        app_question = False
+        try:
+            from ai.chatbot import knowledge_base
+            kb_hits = knowledge_base.retrieve(question, history=self.history)
+            app_question = knowledge_base.is_application_question(
+                question, kb_hits, has_detections=bool(context_detections or counts)
+            )
+            if app_question:
+                scene_context = (
+                    f"{scene_context}\n\n{knowledge_base.context_for_llm(kb_hits)}\n\n"
+                    "When the user asks about the Smart Vision application, answer ONLY from the "
+                    "guide sections above, in simple language with numbered steps where useful. "
+                    "If the guide does not cover it, say that the information is not available. "
+                    "Clearly separate existing features from website-only or planned ones. "
+                    "Never reveal API keys, credentials or private data."
+                )
+        except Exception:
+            kb_hits = []
+            app_question = False
+
         # 1. Check selected provider or auto-detect
         if self.provider == "gemini" or (self.provider == "auto" and (self.gemini_key or os.environ.get("GEMINI_API_KEY"))):
             response = self._query_gemini(question, scene_context)
@@ -530,7 +554,12 @@ class SmartVisionAssistant:
         if not response and (self.provider == "openai" or (self.provider == "auto" and (self.openai_key or os.environ.get("OPENAI_API_KEY")))):
             response = self._query_openai(question, scene_context)
 
-        # 2. Adaptive Zero-Key Conversational Engine Fallback
+        # 2. Grounded answer from the application guide (no LLM configured)
+        if not response and app_question:
+            from ai.chatbot import knowledge_base
+            response = knowledge_base.compose_answer(question, kb_hits)
+
+        # 3. Adaptive Zero-Key Conversational Engine Fallback
         if not response:
             response = self._generative_builtin_engine(question, context_detections, ocr_text, counts)
 

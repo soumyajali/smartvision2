@@ -1,0 +1,573 @@
+{
+ "cases": [
+  {
+   "kind": "original",
+   "question": "What is Smart Vision?",
+   "expected_section": "what-is-smart-vision",
+   "retrieved_section": "what-is-smart-vision",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Smart Vision is a computer-vision application with two front ends that share one Python backend:\n- A **website** (Streamlit, `streamlit run app.py`) and\n- An **Android app** (Flutter).\n\nMain features: real-time object detection (YOLOv8), Fast Video Review, OCR with translation and summarization, face registration and recognition, a Drowsiness Monitor, Research Evaluation, an AutoML & Dataset Pipeline view, detection History, Settings, a Vision Chatbot and a Voice Assistant.\nThe phone runs object detection, OCR, translation and drowsiness checks on the device. Face identity, reference-video search, dataset/storage analytics and the server chatbot need the Smart Vision backend (`uvicorn ai_server:app --host 0.0.0.0 --port 8000`).\n\n_Source: Smart Vision guide \u2013 What is Smart Vision_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Can you give me an overview of this app?",
+   "expected_section": "what-is-smart-vision",
+   "retrieved_section": "what-is-smart-vision",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Smart Vision is a computer-vision application with two front ends that share one Python backend:\n- A **website** (Streamlit, `streamlit run app.py`) and\n- An **Android app** (Flutter).\n\nMain features: real-time object detection (YOLOv8), Fast Video Review, OCR with translation and summarization, face registration and recognition, a Drowsiness Monitor, Research Evaluation, an AutoML & Dataset Pipeline view, detection History, Settings, a Vision Chatbot and a Voice Assistant.\nThe phone runs object detection, OCR, translation and drowsiness checks on the device. Face identity, reference-video search, dataset/storage analytics and the server chatbot need the Smart Vision backend (`uvicorn ai_server:app --host 0.0.0.0 --port 8000`).\n\n_Source: Smart Vision guide \u2013 What is Smart Vision_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I detect an object in an image?",
+   "expected_section": "detect-objects-in-an-image",
+   "retrieved_section": "detect-objects-in-an-image",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Object Detection** (or the Dashboard).\n2. Tap **Upload** to choose a photo from the gallery, or **Capture** to take one.\n3. The bundled YOLOv8n model analyses it on the phone. Boxes, labels and confidence percentages are drawn on the image, and the **Detection Summary** lists each object with its confidence and the processing time.\n4. Tap \u2715 on the image to go back to the camera.\nOn the website choose **Upload Image** on the Dashboard or Object Detection page.\n\n_Source: Smart Vision guide \u2013 Detect objects in an image_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How can I find objects in a photo from my gallery?",
+   "expected_section": "detect-objects-in-an-image",
+   "retrieved_section": "detect-objects-in-an-image",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Object Detection** (or the Dashboard).\n2. Tap **Upload** to choose a photo from the gallery, or **Capture** to take one.\n3. The bundled YOLOv8n model analyses it on the phone. Boxes, labels and confidence percentages are drawn on the image, and the **Detection Summary** lists each object with its confidence and the processing time.\n4. Tap \u2715 on the image to go back to the camera.\nOn the website choose **Upload Image** on the Dashboard or Object Detection page.\n\n_Source: Smart Vision guide \u2013 Detect objects in an image_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I start live detection?",
+   "expected_section": "start-live-camera-detection",
+   "retrieved_section": "start-live-camera-detection",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open the **Dashboard** or **Object Detection**.\n2. Tap **Start Detection**. Allow camera access when asked.\n3. Boxes appear over the live preview. Status, measured FPS, resolution and inference time are shown under the preview.\n4. Tap **Stop Detection** to stop. Use the **Camera** selector to switch between back and front cameras.\nDetection stops automatically when you leave the screen or the app goes to the background.\n\n_Source: Smart Vision guide \u2013 Start live camera detection_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How do I begin real-time scanning with the camera?",
+   "expected_section": "start-live-camera-detection",
+   "retrieved_section": "start-live-camera-detection",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open the **Dashboard** or **Object Detection**.\n2. Tap **Start Detection**. Allow camera access when asked.\n3. Boxes appear over the live preview. Status, measured FPS, resolution and inference time are shown under the preview.\n4. Tap **Stop Detection** to stop. Use the **Camera** selector to switch between back and front cameras.\nDetection stops automatically when you leave the screen or the app goes to the background.\n\n_Source: Smart Vision guide \u2013 Start live camera detection_"
+  },
+  {
+   "kind": "original",
+   "question": "Why is my camera not working?",
+   "expected_section": "camera-not-working",
+   "retrieved_section": "camera-not-working",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- If the screen says **Camera permission needed**, tap **Allow camera**.\n- If it says **Camera access is blocked**, open **Open settings** \u2192 Permissions \u2192 Camera \u2192 Allow, then return to the app.\n- If another app is using the camera, close it and tap **Retry**.\n- The camera closes when the app goes to the background and reopens when you come back.\n- You can still analyse photos with **Upload** when the camera is unavailable.\n\n_Source: Smart Vision guide \u2013 Camera not working_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "The camera preview is black, what should I do?",
+   "expected_section": "camera-not-working",
+   "retrieved_section": "camera-not-working",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- If the screen says **Camera permission needed**, tap **Allow camera**.\n- If it says **Camera access is blocked**, open **Open settings** \u2192 Permissions \u2192 Camera \u2192 Allow, then return to the app.\n- If another app is using the camera, close it and tap **Retry**.\n- The camera closes when the app goes to the background and reopens when you come back.\n- You can still analyse photos with **Upload** when the camera is unavailable.\n\n_Source: Smart Vision guide \u2013 Camera not working_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I upload a reference video?",
+   "expected_section": "upload-a-reference-video-or-image",
+   "retrieved_section": "upload-a-reference-video-or-image",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Fast Video Review** and select **Reference (server)**.\n2. Tap **Choose video to search** and pick the video (its name and a preview are shown).\n3. Tap **Reference image** or **Reference video** and pick the file showing the person or object to find.\n4. Choose the matching precision (Strict, Balanced, Tolerant), frames per second (1\u20135) and, if needed, rotation.\n5. Tap **Find matching frames**. Upload and processing progress are shown; you can cancel.\nThe backend must be connected (Settings \u2192 Backend Server).\n\n_Source: Smart Vision guide \u2013 Upload a reference video or image_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Where do I pick the sample clip to search with?",
+   "expected_section": "upload-a-reference-video-or-image",
+   "retrieved_section": "upload-a-reference-video-or-image",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Fast Video Review** and select **Reference (server)**.\n2. Tap **Choose video to search** and pick the video (its name and a preview are shown).\n3. Tap **Reference image** or **Reference video** and pick the file showing the person or object to find.\n4. Choose the matching precision (Strict, Balanced, Tolerant), frames per second (1\u20135) and, if needed, rotation.\n5. Tap **Find matching frames**. Upload and processing progress are shown; you can cancel.\nThe backend must be connected (Settings \u2192 Backend Server).\n\n_Source: Smart Vision guide \u2013 Upload a reference video or image_"
+  },
+  {
+   "kind": "original",
+   "question": "How does Fast Video Review find matching frames?",
+   "expected_section": "how-fast-video-review-finds-matching-frames",
+   "retrieved_section": "how-fast-video-review-finds-matching-frames",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The reference search reproduces the website's algorithm:\n- **Reference preparation:** if the reference shows a face, the target is that person and frames are compared by face (face_recognition encodings when that library is installed, otherwise YuNet/SFace). Otherwise the most confident YOLO detection is cropped and its class becomes the search category.\n- **Object/appearance matching:** each candidate box in a sampled frame is compared with the reference using 55 % MobileNetV2 feature similarity + 45 % HSV colour-histogram correlation. A frame matches only if the score reaches the precision threshold (Strict 72 %, Balanced 65 %, Tolerant 55 %) and the colour correlation is at least 50 %.\n- **Reference videos:** up to 5 evenly spaced frames are used as references; a candidate matches if it matches any of them.\n- Matches less than 2 seconds apart are merged.\nDimensions, timestamps or file names are never used to decide a match.\n\n_Source: Smart Vision guide \u2013 How Fast Video Review finds matching frames_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What algorithm compares frames in video review?",
+   "expected_section": "how-fast-video-review-finds-matching-frames",
+   "retrieved_section": "how-fast-video-review-finds-matching-frames",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The reference search reproduces the website's algorithm:\n- **Reference preparation:** if the reference shows a face, the target is that person and frames are compared by face (face_recognition encodings when that library is installed, otherwise YuNet/SFace). Otherwise the most confident YOLO detection is cropped and its class becomes the search category.\n- **Object/appearance matching:** each candidate box in a sampled frame is compared with the reference using 55 % MobileNetV2 feature similarity + 45 % HSV colour-histogram correlation. A frame matches only if the score reaches the precision threshold (Strict 72 %, Balanced 65 %, Tolerant 55 %) and the colour correlation is at least 50 %.\n- **Reference videos:** up to 5 evenly spaced frames are used as references; a candidate matches if it matches any of them.\n- Matches less than 2 seconds apart are merged.\nDimensions, timestamps or file names are never used to decide a match.\n\n_Source: Smart Vision guide \u2013 How Fast Video Review finds matching frames_"
+  },
+  {
+   "kind": "original",
+   "question": "Where can I see the matching timestamp?",
+   "expected_section": "matching-timestamps-and-similarity-scores",
+   "retrieved_section": "matching-timestamps-and-similarity-scores",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "After a search, each match shows its **timestamp** (MM:SS), **frame number**, **similarity** (the matching score above) and a thumbnail with the matched box. Tap a match to jump the video player to that moment. If nothing reaches the threshold, the app shows **No matching frames** \u2013 this is a genuine result, not an error. Tap **New search** to try other videos.\n\n_Source: Smart Vision guide \u2013 Matching timestamps and similarity scores_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "At what time in the clip was the match found?",
+   "expected_section": "matching-timestamps-and-similarity-scores",
+   "retrieved_section": "matching-timestamps-and-similarity-scores",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "After a search, each match shows its **timestamp** (MM:SS), **frame number**, **similarity** (the matching score above) and a thumbnail with the matched box. Tap a match to jump the video player to that moment. If nothing reaches the threshold, the app shows **No matching frames** \u2013 this is a genuine result, not an error. Tap **New search** to try other videos.\n\n_Source: Smart Vision guide \u2013 Matching timestamps and similarity scores_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I register a face?",
+   "expected_section": "register-a-face",
+   "retrieved_section": "register-a-face",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Face Recognition \u2192 Register**.\n2. Enter the person's **name**.\n3. Tap **Capture** or **Choose** to get a clear, front-facing photo with exactly one face.\n4. The phone checks that one face is visible, then tap **Register face**.\n5. The backend saves the photo in its `known_faces` folder and rebuilds the SFace embeddings. Success is shown only after the server confirms the save. The person then appears under **People \u2192 Registered people**, where you can rename or delete them.\nRegistering the same name again adds another sample for that person. Registration needs the backend; the website and the app share the same registered people.\n\n_Source: Smart Vision guide \u2013 Register a face_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How can I enroll a new person?",
+   "expected_section": "register-a-face",
+   "retrieved_section": "register-a-face",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Face Recognition \u2192 Register**.\n2. Enter the person's **name**.\n3. Tap **Capture** or **Choose** to get a clear, front-facing photo with exactly one face.\n4. The phone checks that one face is visible, then tap **Register face**.\n5. The backend saves the photo in its `known_faces` folder and rebuilds the SFace embeddings. Success is shown only after the server confirms the save. The person then appears under **People \u2192 Registered people**, where you can rename or delete them.\nRegistering the same name again adds another sample for that person. Registration needs the backend; the website and the app share the same registered people.\n\n_Source: Smart Vision guide \u2013 Register a face_"
+  },
+  {
+   "kind": "original",
+   "question": "How does a registered face get identified?",
+   "expected_section": "how-a-registered-face-is-identified",
+   "retrieved_section": "how-a-registered-face-is-identified",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The backend detects faces with YuNet and turns each face into an SFace embedding. It compares the embedding with every registered person's samples using cosine similarity. A name is shown \u2013 **Registered Person: Name** \u2013 only when the best similarity is at least **0.363** and is at least 0.05 better than the next person. This is used on the Face Recognition screen and in Object Detection when a person is detected and the backend is online.\n\n_Source: Smart Vision guide \u2013 How a registered face is identified_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How does the app recognise who someone is?",
+   "expected_section": "how-a-registered-face-is-identified",
+   "retrieved_section": "how-a-registered-face-is-identified",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The backend detects faces with YuNet and turns each face into an SFace embedding. It compares the embedding with every registered person's samples using cosine similarity. A name is shown \u2013 **Registered Person: Name** \u2013 only when the best similarity is at least **0.363** and is at least 0.05 better than the next person. This is used on the Face Recognition screen and in Object Detection when a person is detected and the backend is online.\n\n_Source: Smart Vision guide \u2013 How a registered face is identified_"
+  },
+  {
+   "kind": "original",
+   "question": "What happens when an unknown face appears?",
+   "expected_section": "unknown-faces",
+   "retrieved_section": "unknown-faces",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "If a face is detected but no registered person passes the threshold and margin, the app shows **Unknown Face**. Ambiguous or weak matches are never given a name. Detecting a face is not the same as identifying it: without the backend the phone can only say that a face is present.\n\n_Source: Smart Vision guide \u2013 Unknown faces_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What is shown for a stranger who is not registered?",
+   "expected_section": "unknown-faces",
+   "retrieved_section": "unknown-faces",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "If a face is detected but no registered person passes the threshold and margin, the app shows **Unknown Face**. Ambiguous or weak matches are never given a name. Detecting a face is not the same as identifying it: without the backend the phone can only say that a face is present.\n\n_Source: Smart Vision guide \u2013 Unknown faces_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I extract text using OCR?",
+   "expected_section": "extract-text-with-ocr",
+   "retrieved_section": "extract-text-with-ocr",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **OCR**.\n2. Tap **Camera** or **Upload** for a photo, or **Video OCR** / **Record Video** for a video.\n3. Google ML Kit reads the text on the phone. The text appears in an editable box \u2013 use **Copy** or the speaker button to read it aloud.\nVideo OCR samples one frame per second and shows progress; you can cancel it. The website uses EasyOCR on the server.\n\n_Source: Smart Vision guide \u2013 Extract text with OCR_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How can I read the words in a document picture?",
+   "expected_section": "extract-text-with-ocr",
+   "retrieved_section": "extract-text-with-ocr",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **OCR**.\n2. Tap **Camera** or **Upload** for a photo, or **Video OCR** / **Record Video** for a video.\n3. Google ML Kit reads the text on the phone. The text appears in an editable box \u2013 use **Copy** or the speaker button to read it aloud.\nVideo OCR samples one frame per second and shows progress; you can cancel it. The website uses EasyOCR on the server.\n\n_Source: Smart Vision guide \u2013 Extract text with OCR_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I translate extracted text?",
+   "expected_section": "translate-extracted-text",
+   "retrieved_section": "translate-extracted-text",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "After extracting text in **OCR**, choose a language (Hindi, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Spanish, French, German, Chinese, Japanese, Russian, Arabic) and tap **Translate**. Translation runs on the phone with ML Kit; the first time a language is used its model is downloaded, so internet is needed once.\n\n_Source: Smart Vision guide \u2013 Translate extracted text_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Can I convert the scanned text into Hindi?",
+   "expected_section": "translate-extracted-text",
+   "retrieved_section": "translate-extracted-text",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "After extracting text in **OCR**, choose a language (Hindi, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Spanish, French, German, Chinese, Japanese, Russian, Arabic) and tap **Translate**. Translation runs on the phone with ML Kit; the first time a language is used its model is downloaded, so internet is needed once.\n\n_Source: Smart Vision guide \u2013 Translate extracted text_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I summarize extracted text?",
+   "expected_section": "summarize-extracted-text",
+   "retrieved_section": "summarize-extracted-text",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "In **OCR**, tap **Summarize** (a separate button from Translate). The app picks the most informative sentences (up to three) using the same word-frequency method as the backend `/summarize` endpoint. Very short text is returned unchanged.\n\n_Source: Smart Vision guide \u2013 Summarize extracted text_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Can it shorten the recognised text into a brief?",
+   "expected_section": "summarize-extracted-text",
+   "retrieved_section": "summarize-extracted-text",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "In **OCR**, tap **Summarize** (a separate button from Translate). The app picks the most informative sentences (up to three) using the same word-frequency method as the backend `/summarize` endpoint. Very short text is returned unchanged.\n\n_Source: Smart Vision guide \u2013 Summarize extracted text_"
+  },
+  {
+   "kind": "original",
+   "question": "How does the Drowsiness Monitor work?",
+   "expected_section": "drowsiness-monitor",
+   "retrieved_section": "drowsiness-monitor",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Drowsiness Monitor** and tap **Start monitoring** (the front camera opens).\n2. ML Kit estimates how open your eyes are about six times per second.\n3. If your eyes stay closed longer than the alert time (default 1.0 s; eyes count as closed below 25 % open probability), the app shows **DROWSY**, speaks an alert and plays the siren (if enabled in Settings).\nYou can also analyse a recorded video. Monitoring only works while the screen is open and the app is in the foreground.\n\n_Source: Smart Vision guide \u2013 Drowsiness Monitor_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How does it know if I'm getting sleepy?",
+   "expected_section": "drowsiness-monitor",
+   "retrieved_section": "drowsiness-monitor",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "1. Open **Drowsiness Monitor** and tap **Start monitoring** (the front camera opens).\n2. ML Kit estimates how open your eyes are about six times per second.\n3. If your eyes stay closed longer than the alert time (default 1.0 s; eyes count as closed below 25 % open probability), the app shows **DROWSY**, speaks an alert and plays the siren (if enabled in Settings).\nYou can also analyse a recorded video. Monitoring only works while the screen is open and the app is in the foreground.\n\n_Source: Smart Vision guide \u2013 Drowsiness Monitor_"
+  },
+  {
+   "kind": "original",
+   "question": "What does Research Evaluation show?",
+   "expected_section": "research-evaluation",
+   "retrieved_section": "research-evaluation",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Research Evaluation is view-only. It shows evaluation results that already exist in the project, read from the backend:\n- detection accuracy per test scenario (precision, recall and F1 computed from expected vs detected classes),\n- latency benchmark (average FPS and latency),\n- distance-estimation error, OCR character/word error rates and the chatbot model test results,\n- mAP only if YOLO validation results exist (otherwise it says mAP has not been computed).\nIt never starts training. You can export the results. The phone can also run a separate on-device speed benchmark.\n\n_Source: Smart Vision guide \u2013 Research Evaluation_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Where can I see the model's evaluation metrics?",
+   "expected_section": "research-evaluation",
+   "retrieved_section": "research-evaluation",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Research Evaluation is view-only. It shows evaluation results that already exist in the project, read from the backend:\n- detection accuracy per test scenario (precision, recall and F1 computed from expected vs detected classes),\n- latency benchmark (average FPS and latency),\n- distance-estimation error, OCR character/word error rates and the chatbot model test results,\n- mAP only if YOLO validation results exist (otherwise it says mAP has not been computed).\nIt never starts training. You can export the results. The phone can also run a separate on-device speed benchmark.\n\n_Source: Smart Vision guide \u2013 Research Evaluation_"
+  },
+  {
+   "kind": "original",
+   "question": "What is the difference between precision and recall?",
+   "expected_section": "precision-recall-f1-and-map-explained",
+   "retrieved_section": "precision-recall-f1-and-map-explained",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- **Precision** = correct detections \u00f7 all detections made. High precision means few false alarms.\n- **Recall** = correct detections \u00f7 all objects that should have been found. High recall means few missed objects.\n- **F1-score** is the harmonic mean of precision and recall.\n- **mAP** (mean average precision) averages precision over recall levels and classes, using box overlap (IoU); it requires a labelled validation run.\nIn Smart Vision's Research Evaluation, precision/recall are class-level: a scenario's detected labels are compared with its expected labels.\n\n_Source: Smart Vision guide \u2013 Precision, recall, F1 and mAP explained_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Explain precision versus recall",
+   "expected_section": "precision-recall-f1-and-map-explained",
+   "retrieved_section": "precision-recall-f1-and-map-explained",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- **Precision** = correct detections \u00f7 all detections made. High precision means few false alarms.\n- **Recall** = correct detections \u00f7 all objects that should have been found. High recall means few missed objects.\n- **F1-score** is the harmonic mean of precision and recall.\n- **mAP** (mean average precision) averages precision over recall levels and classes, using box overlap (IoU); it requires a labelled validation run.\nIn Smart Vision's Research Evaluation, precision/recall are class-level: a scenario's detected labels are compared with its expected labels.\n\n_Source: Smart Vision guide \u2013 Precision, recall, F1 and mAP explained_"
+  },
+  {
+   "kind": "original",
+   "question": "How much storage does the application use?",
+   "expected_section": "storage-used-by-the-application",
+   "retrieved_section": "storage-used-by-the-application",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **AutoML & Dataset Pipeline \u2192 Storage**:\n- **Backend project folder:** measured file sizes by category \u2013 datasets, model weights, checkpoints & training artifacts, uploaded/captured media (recordings, detections, registered faces), generated reports, databases \u2013 each file counted once, with file counts, the server disk's free space and the time of measurement.\n- **This phone:** the size of the app's own files (database, documents, cache). The app does not measure the whole phone or any cloud quota.\nTap **Refresh** to measure again. Values that cannot be measured are shown as Unavailable.\n\n_Source: Smart Vision guide \u2013 Storage used by the application_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How much disk space do the datasets and models take?",
+   "expected_section": "storage-used-by-the-application",
+   "retrieved_section": "storage-used-by-the-application",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **AutoML & Dataset Pipeline \u2192 Storage**:\n- **Backend project folder:** measured file sizes by category \u2013 datasets, model weights, checkpoints & training artifacts, uploaded/captured media (recordings, detections, registered faces), generated reports, databases \u2013 each file counted once, with file counts, the server disk's free space and the time of measurement.\n- **This phone:** the size of the app's own files (database, documents, cache). The app does not measure the whole phone or any cloud quota.\nTap **Refresh** to measure again. Values that cannot be measured are shown as Unavailable.\n\n_Source: Smart Vision guide \u2013 Storage used by the application_"
+  },
+  {
+   "kind": "original",
+   "question": "What is the training dataset?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Which data is the model trained on?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "original",
+   "question": "What is the validation dataset?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What is the val split used for?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "original",
+   "question": "What is the testing dataset?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What is the test split?",
+   "expected_section": "training-validation-and-test-datasets",
+   "retrieved_section": "training-validation-and-test-datasets",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline \u2192 Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**.\n\n_Source: Smart Vision guide \u2013 Training, validation and test datasets_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I check training status?",
+   "expected_section": "check-training-status",
+   "retrieved_section": "check-training-status",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **AutoML & Dataset Pipeline \u2192 Training**. It lists the YOLO runs found in `runs/` (model, dataset, configured epochs and whether results exist), the chatbot LoRA run metrics, and the saved model files. The backend has no training job manager, so the status shows no active job; training is run with the project scripts (`ai/train.py`, `scripts/train_and_evaluate.py`, notebooks). Opening the screen never starts training.\n\n_Source: Smart Vision guide \u2013 Check training status_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Is a model being trained right now?",
+   "expected_section": "check-training-status",
+   "retrieved_section": "check-training-status",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **AutoML & Dataset Pipeline \u2192 Training**. It lists the YOLO runs found in `runs/` (model, dataset, configured epochs and whether results exist), the chatbot LoRA run metrics, and the saved model files. The backend has no training job manager, so the status shows no active job; training is run with the project scripts (`ai/train.py`, `scripts/train_and_evaluate.py`, notebooks). Opening the screen never starts training.\n\n_Source: Smart Vision guide \u2013 Check training status_"
+  },
+  {
+   "kind": "original",
+   "question": "Why is detection failing on my phone?",
+   "expected_section": "detection-failing-or-inaccurate-on-the-phone",
+   "retrieved_section": "detection-failing-or-inaccurate-on-the-phone",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- If the panel shows **Model failed to load**, tap **Retry**. The error text explains the cause.\n- \"No objects detected\" means nothing scored above the **Confidence Threshold**. Improve lighting, move closer, or lower the threshold in Detection Settings.\n- The phone uses YOLOv8n at 320\u00d7320 pixels: small or distant objects can be missed and similar objects can be confused (for example knife vs scissors). The backend uses the larger YOLOv8m model, which is more accurate.\n- Detection only knows the 80 COCO classes listed in AutoML & Dataset Pipeline.\n\n_Source: Smart Vision guide \u2013 Detection failing or inaccurate on the phone_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Nothing gets detected on my mobile, why?",
+   "expected_section": "detection-failing-or-inaccurate-on-the-phone",
+   "retrieved_section": "detection-failing-or-inaccurate-on-the-phone",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- If the panel shows **Model failed to load**, tap **Retry**. The error text explains the cause.\n- \"No objects detected\" means nothing scored above the **Confidence Threshold**. Improve lighting, move closer, or lower the threshold in Detection Settings.\n- The phone uses YOLOv8n at 320\u00d7320 pixels: small or distant objects can be missed and similar objects can be confused (for example knife vs scissors). The backend uses the larger YOLOv8m model, which is more accurate.\n- Detection only knows the 80 COCO classes listed in AutoML & Dataset Pipeline.\n\n_Source: Smart Vision guide \u2013 Detection failing or inaccurate on the phone_"
+  },
+  {
+   "kind": "original",
+   "question": "Why is the backend disconnected?",
+   "expected_section": "backend-connection",
+   "retrieved_section": "backend-connection",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The coloured **Server** light in the app bar shows the real server status (green online, red offline, grey not configured). Tap it for details. To connect:\n1. On the computer run `uvicorn ai_server:app --host 0.0.0.0 --port 8000`.\n2. Find the computer's Wi-Fi IP address (for example 192.168.1.20).\n3. In the app open **Settings \u2192 Backend Server**, enter `http://192.168.1.20:8000` and tap **Save & test**.\nDo not use `localhost` on a phone \u2013 it means the phone itself. The Android emulator uses `http://10.0.2.2:8000`. Phone and computer must be on the same network and the firewall must allow port 8000.\n\n_Source: Smart Vision guide \u2013 Backend connection_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "The server shows offline, how do I connect it?",
+   "expected_section": "backend-connection",
+   "retrieved_section": "backend-connection",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The coloured **Server** light in the app bar shows the real server status (green online, red offline, grey not configured). Tap it for details. To connect:\n1. On the computer run `uvicorn ai_server:app --host 0.0.0.0 --port 8000`.\n2. Find the computer's Wi-Fi IP address (for example 192.168.1.20).\n3. In the app open **Settings \u2192 Backend Server**, enter `http://192.168.1.20:8000` and tap **Save & test**.\nDo not use `localhost` on a phone \u2013 it means the phone itself. The Android emulator uses `http://10.0.2.2:8000`. Phone and computer must be on the same network and the firewall must allow port 8000.\n\n_Source: Smart Vision guide \u2013 Backend connection_"
+  },
+  {
+   "kind": "original",
+   "question": "Which features require internet access?",
+   "expected_section": "features-that-need-internet-or-the-backend",
+   "retrieved_section": "features-that-need-internet-or-the-backend",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Work fully on the phone without a server: object detection (live, image, video), Fast Video Review by object category, OCR, summarization, drowsiness monitoring, History, on-device chatbot answers.\nNeed the Smart Vision backend: face registration and identity recognition, Fast Video Review with a reference image/video, Research Evaluation results, AutoML & Dataset Pipeline, server chatbot answers.\nNeed internet: first use of each translation language (model download), voice speech recognition on most phones, and Gemini/OpenAI answers on the server.\n\n_Source: Smart Vision guide \u2013 Features that need internet or the backend_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What works offline without the server?",
+   "expected_section": "features-that-need-internet-or-the-backend",
+   "retrieved_section": "features-that-need-internet-or-the-backend",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Work fully on the phone without a server: object detection (live, image, video), Fast Video Review by object category, OCR, summarization, drowsiness monitoring, History, on-device chatbot answers.\nNeed the Smart Vision backend: face registration and identity recognition, Fast Video Review with a reference image/video, Research Evaluation results, AutoML & Dataset Pipeline, server chatbot answers.\nNeed internet: first use of each translation language (model download), voice speech recognition on most phones, and Gemini/OpenAI answers on the server.\n\n_Source: Smart Vision guide \u2013 Features that need internet or the backend_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I troubleshoot a failed video upload?",
+   "expected_section": "video-upload-failed",
+   "retrieved_section": "video-upload-failed",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- Check that the backend is **online** (green API light in the app bar).\n- Supported videos: mp4, mov, avi, mkv, webm, m4v, 3gp. Images: jpg, png, bmp, webp.\n- The server limit is 1 GB per file by default (`SMARTVISION_MAX_UPLOAD_MB`).\n- \"could not be opened\" means the file is corrupt or uses an unsupported codec \u2013 re-export it as H.264 mp4.\n- Large videos take longer: use 1 frame per second, keep the phone awake, and stay on the same Wi-Fi network.\n- \"The server is already processing videos\" means two searches are running; wait and retry.\n\n_Source: Smart Vision guide \u2013 Video upload failed_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "My video won't upload to the server, help",
+   "expected_section": "video-upload-failed",
+   "retrieved_section": "video-upload-failed",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "- Check that the backend is **online** (green API light in the app bar).\n- Supported videos: mp4, mov, avi, mkv, webm, m4v, 3gp. Images: jpg, png, bmp, webp.\n- The server limit is 1 GB per file by default (`SMARTVISION_MAX_UPLOAD_MB`).\n- \"could not be opened\" means the file is corrupt or uses an unsupported codec \u2013 re-export it as H.264 mp4.\n- Large videos take longer: use 1 frame per second, keep the phone awake, and stay on the same Wi-Fi network.\n- \"The server is already processing videos\" means two searches are running; wait and retry.\n\n_Source: Smart Vision guide \u2013 Video upload failed_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I use AutoML & Dataset Pipeline?",
+   "expected_section": "using-automl-dataset-pipeline",
+   "retrieved_section": "using-automl-dataset-pipeline",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The page has three parts: **Storage** (measured disk usage by category), **Datasets** (split statistics) and **Training** (runs and artifacts). It reads everything from the backend; connect the backend in Settings first and tap **Refresh** to update. It is a monitoring page \u2013 it does not upload datasets or start training.\n\n_Source: Smart Vision guide \u2013 Using AutoML & Dataset Pipeline_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What is the AutoML page for?",
+   "expected_section": "using-automl-dataset-pipeline",
+   "retrieved_section": "using-automl-dataset-pipeline",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The page has three parts: **Storage** (measured disk usage by category), **Datasets** (split statistics) and **Training** (runs and artifacts). It reads everything from the backend; connect the backend in Settings first and tap **Refresh** to update. It is a monitoring page \u2013 it does not upload datasets or start training.\n\n_Source: Smart Vision guide \u2013 Using AutoML & Dataset Pipeline_"
+  },
+  {
+   "kind": "original",
+   "question": "What does the Vision Chatbot do?",
+   "expected_section": "vision-chatbot",
+   "retrieved_section": "vision-chatbot",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The Vision Chatbot answers typed questions about the latest detections (\"what do you see?\", \"how many people?\", \"any hazards?\") and about how to use Smart Vision. When the backend is connected, answers come from the server assistant, which retrieves sections of this guide and uses Gemini or OpenAI if an API key is configured on the server. Offline, the phone answers from the same guide and from the latest local detections. Each answer says which engine answered. It does not invent detections.\n\n_Source: Smart Vision guide \u2013 Vision Chatbot_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "What can the chat assistant answer?",
+   "expected_section": "vision-chatbot",
+   "retrieved_section": "vision-chatbot",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "The Vision Chatbot answers typed questions about the latest detections (\"what do you see?\", \"how many people?\", \"any hazards?\") and about how to use Smart Vision. When the backend is connected, answers come from the server assistant, which retrieves sections of this guide and uses Gemini or OpenAI if an API key is configured on the server. Offline, the phone answers from the same guide and from the latest local detections. Each answer says which engine answered. It does not invent detections.\n\n_Source: Smart Vision guide \u2013 Vision Chatbot_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I use the Voice Assistant?",
+   "expected_section": "voice-assistant",
+   "retrieved_section": "voice-assistant",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **Voice Assistant** and tap the microphone (or type). You can ask questions (\"what do you see?\", \"how do I use OCR?\") or say commands: \"open object detection\", \"go to history\", \"turn on/off voice announcements\", \"reset voice announcements\". Answers are spoken aloud. Speech recognition uses the phone's speech service (it may need internet).\n\n_Source: Smart Vision guide \u2013 Voice Assistant_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Can I talk to the app with my voice?",
+   "expected_section": "voice-assistant",
+   "retrieved_section": "voice-assistant",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **Voice Assistant** and tap the microphone (or type). You can ask questions (\"what do you see?\", \"how do I use OCR?\") or say commands: \"open object detection\", \"go to history\", \"turn on/off voice announcements\", \"reset voice announcements\". Answers are spoken aloud. Speech recognition uses the phone's speech service (it may need internet).\n\n_Source: Smart Vision guide \u2013 Voice Assistant_"
+  },
+  {
+   "kind": "original",
+   "question": "Where is detection history?",
+   "expected_section": "detection-history",
+   "retrieved_section": "detection-history",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **History** from the bottom bar or the drawer. It lists saved detections and analyses (image/video detection, OCR, video review, drowsiness, face recognition, benchmarks) stored in the phone's local database. Tap a record for details or use the delete button to clear history.\n\n_Source: Smart Vision guide \u2013 Detection history_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "Where are my previous scans saved?",
+   "expected_section": "detection-history",
+   "retrieved_section": "detection-history",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **History** from the bottom bar or the drawer. It lists saved detections and analyses (image/video detection, OCR, video review, drowsiness, face recognition, benchmarks) stored in the phone's local database. Tap a record for details or use the delete button to clear history.\n\n_Source: Smart Vision guide \u2013 Detection history_"
+  },
+  {
+   "kind": "original",
+   "question": "How do I change detection settings?",
+   "expected_section": "detection-settings",
+   "retrieved_section": "detection-settings",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **Detection Settings** on the Dashboard, Object Detection or Settings page:\n- **Confidence Threshold** (5\u201395 %): hides predictions below this score.\n- **IoU Threshold** (0.10\u20130.90): overlap used to remove duplicate boxes (non-maximum suppression).\n- **Maximum Detections** (1\u2013300).\nChanges are saved on the phone and are used by live, image and video detection. The current image is re-analysed when you change a value. **Reset to defaults** restores 25 % \u00b7 0.45 \u00b7 100.\n\n_Source: Smart Vision guide \u2013 Detection settings_"
+  },
+  {
+   "kind": "paraphrase",
+   "question": "How do I adjust the confidence threshold?",
+   "expected_section": "detection-settings",
+   "retrieved_section": "detection-settings",
+   "retrieval_correct": true,
+   "grounded": true,
+   "response": "Open **Detection Settings** on the Dashboard, Object Detection or Settings page:\n- **Confidence Threshold** (5\u201395 %): hides predictions below this score.\n- **IoU Threshold** (0.10\u20130.90): overlap used to remove duplicate boxes (non-maximum suppression).\n- **Maximum Detections** (1\u2013300).\nChanges are saved on the phone and are used by live, image and video detection. The current image is re-analysed when you change a value. **Reset to defaults** restores 25 % \u00b7 0.45 \u00b7 100.\n\n_Source: Smart Vision guide \u2013 Detection settings_"
+  }
+ ],
+ "extra": [
+  {
+   "kind": "ambiguous",
+   "question": "How do I upload a video?",
+   "response": "Do you mean **Video upload failed** or **Upload a reference video or image**? Tell me which one and I'll give you the steps."
+  },
+  {
+   "kind": "general",
+   "question": "hello",
+   "response": "Hello there! Great to connect with you. How can I help you today? Feel free to ask about what's in your camera, coding, recipes, or anything else you're curious about!"
+  },
+  {
+   "kind": "general",
+   "question": "what is 12 * 7?",
+   "response": "\ud83d\udd22 **Calculation Result:**\n\n$$12 * 7 = 84$$\n\nThe answer is **84**."
+  },
+  {
+   "kind": "general",
+   "question": "tell me a joke",
+   "response": "\ud83d\ude04 Here's one for you:\n\nWhy did the computer go to the doctor?\n\n*Because it had a virus and needed a cache check!* \ud83e\ude7a"
+  },
+  {
+   "kind": "follow-up",
+   "question": "How do I extract text using OCR? \u2192 and how do I translate it?",
+   "expected_section": "translate-extracted-text",
+   "response": "After extracting text in **OCR**, choose a language (Hindi, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Spanish, French, German, Chinese, Japanese, Russian, Arabic) and tap **Translate**. Translation runs on the phone with ML Kit; the first time a language is used its model is downloaded, so internet is needed once.\n\n_Source: Smart Vision guide \u2013 Translate extracted text_",
+   "grounded": true
+  }
+ ]
+}

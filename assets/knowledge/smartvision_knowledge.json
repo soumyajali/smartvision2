@@ -1,0 +1,222 @@
+{
+ "version": "253686a01e90",
+ "source": "knowledge/smartvision_knowledge.md",
+ "sections": [
+  {
+   "id": "what-is-smart-vision",
+   "title": "What is Smart Vision",
+   "keywords": "about the app, overview of this app, app overview, smartvision, what does this application do, features list, introduction, purpose, summary of the app",
+   "body": "Smart Vision is a computer-vision application with two front ends that share one Python backend:\n- A **website** (Streamlit, `streamlit run app.py`) and\n- An **Android app** (Flutter).\n\nMain features: real-time object detection (YOLOv8), Fast Video Review, OCR with translation and summarization, face registration and recognition, a Drowsiness Monitor, Research Evaluation, an AutoML & Dataset Pipeline view, detection History, Settings, a Vision Chatbot and a Voice Assistant.\nThe phone runs object detection, OCR, translation and drowsiness checks on the device. Face identity, reference-video search, dataset/storage analytics and the server chatbot need the Smart Vision backend (`uvicorn ai_server:app --host 0.0.0.0 --port 8000`)."
+  },
+  {
+   "id": "navigating-the-app",
+   "title": "Navigating the app",
+   "keywords": "menu, drawer, sidebar, where is, find a page, bottom bar, tabs, open a screen, back button, navigation",
+   "body": "On the phone, tap the **menu (☰)** button at the top left to open the drawer. It lists the six main features, then **MORE** (Research Evaluation, AutoML & Dataset Pipeline, History, Settings, Meet the Builders) and **AI TOOLS** (Vision Chatbot, Voice Assistant).\nThe bottom bar gives one-tap access to Dashboard, Detect, OCR and History. The Android back button returns to the Dashboard; on the Dashboard it closes the app.\nOn the website the same pages are in the left sidebar."
+  },
+  {
+   "id": "detect-objects-in-an-image",
+   "title": "Detect objects in an image",
+   "keywords": "photo, picture, upload image, gallery, analyse image, object detection on image, detect object in a picture, identify objects, still image",
+   "body": "1. Open **Object Detection** (or the Dashboard).\n2. Tap **Upload** to choose a photo from the gallery, or **Capture** to take one.\n3. The bundled YOLOv8n model analyses it on the phone. Boxes, labels and confidence percentages are drawn on the image, and the **Detection Summary** lists each object with its confidence and the processing time.\n4. Tap ✕ on the image to go back to the camera.\nOn the website choose **Upload Image** on the Dashboard or Object Detection page."
+  },
+  {
+   "id": "start-live-camera-detection",
+   "title": "Start live camera detection",
+   "keywords": "live detection, real time, start detection, webcam, camera scanning, start scanning, stop detection, fps",
+   "body": "1. Open the **Dashboard** or **Object Detection**.\n2. Tap **Start Detection**. Allow camera access when asked.\n3. Boxes appear over the live preview. Status, measured FPS, resolution and inference time are shown under the preview.\n4. Tap **Stop Detection** to stop. Use the **Camera** selector to switch between back and front cameras.\nDetection stops automatically when you leave the screen or the app goes to the background."
+  },
+  {
+   "id": "camera-not-working",
+   "title": "Camera not working",
+   "keywords": "camera black, camera permission, camera error, preview not showing, camera denied, allow camera, camera unavailable, camera blocked",
+   "body": "- If the screen says **Camera permission needed**, tap **Allow camera**.\n- If it says **Camera access is blocked**, open **Open settings** → Permissions → Camera → Allow, then return to the app.\n- If another app is using the camera, close it and tap **Retry**.\n- The camera closes when the app goes to the background and reopens when you come back.\n- You can still analyse photos with **Upload** when the camera is unavailable."
+  },
+  {
+   "id": "detection-failing-or-inaccurate-on-the-phone",
+   "title": "Detection failing or inaccurate on the phone",
+   "keywords": "no detections, wrong objects, model error, detection not working, low accuracy, nothing detected, model failed to load, retry model",
+   "body": "- If the panel shows **Model failed to load**, tap **Retry**. The error text explains the cause.\n- \"No objects detected\" means nothing scored above the **Confidence Threshold**. Improve lighting, move closer, or lower the threshold in Detection Settings.\n- The phone uses YOLOv8n at 320×320 pixels: small or distant objects can be missed and similar objects can be confused (for example knife vs scissors). The backend uses the larger YOLOv8m model, which is more accurate.\n- Detection only knows the 80 COCO classes listed in AutoML & Dataset Pipeline."
+  },
+  {
+   "id": "detection-settings",
+   "title": "Detection settings",
+   "keywords": "confidence threshold, iou, nms, maximum detections, sensitivity, change settings, thresholds, adjust detection",
+   "body": "Open **Detection Settings** on the Dashboard, Object Detection or Settings page:\n- **Confidence Threshold** (5–95 %): hides predictions below this score.\n- **IoU Threshold** (0.10–0.90): overlap used to remove duplicate boxes (non-maximum suppression).\n- **Maximum Detections** (1–300).\nChanges are saved on the phone and are used by live, image and video detection. The current image is re-analysed when you change a value. **Reset to defaults** restores 25 % · 0.45 · 100."
+  },
+  {
+   "id": "video-analysis-in-object-detection",
+   "title": "Video analysis in Object Detection",
+   "keywords": "detect objects in a video, analyse video, video detection, record video, video timeline",
+   "body": "In **Object Detection → Video**, choose or record a video, pick how many frames per second to analyse (1, 2 or 5) and tap **Detect objects in video**. The phone samples frames, runs the detector on each, and lists the classes found and a timeline of timestamps. You can cancel at any time; results are saved to History."
+  },
+  {
+   "id": "fast-video-review-modes",
+   "title": "Fast Video Review modes",
+   "keywords": "video review, search a video, look through a video, when does an object appear, fast review, scan video, modes",
+   "body": "Fast Video Review finds the moments in a video where something appears. It has two modes:\n1. **Object category** – runs on the phone. Choose a class (for example *person* or *car*); the app samples frames and lists every timestamp where that class is detected, with the share of sampled frames that contained it.\n2. **Reference image / video** – runs on the Smart Vision backend with the same algorithm as the website. You upload the video to search and a reference image or reference video of the person or object you are looking for."
+  },
+  {
+   "id": "upload-a-reference-video-or-image",
+   "title": "Upload a reference video or image",
+   "keywords": "reference video, reference image, upload reference, choose reference, search with reference, target video, comparison video",
+   "body": "1. Open **Fast Video Review** and select **Reference (server)**.\n2. Tap **Choose video to search** and pick the video (its name and a preview are shown).\n3. Tap **Reference image** or **Reference video** and pick the file showing the person or object to find.\n4. Choose the matching precision (Strict, Balanced, Tolerant), frames per second (1–5) and, if needed, rotation.\n5. Tap **Find matching frames**. Upload and processing progress are shown; you can cancel.\nThe backend must be connected (Settings → Backend Server)."
+  },
+  {
+   "id": "how-fast-video-review-finds-matching-frames",
+   "title": "How Fast Video Review finds matching frames",
+   "keywords": "matching algorithm, how does it find matching frames, how matching works, similarity score calculation, compare frames, appearance matching, face matching, mobilenet, histogram, matching method",
+   "body": "The reference search reproduces the website's algorithm:\n- **Reference preparation:** if the reference shows a face, the target is that person and frames are compared by face (face_recognition encodings when that library is installed, otherwise YuNet/SFace). Otherwise the most confident YOLO detection is cropped and its class becomes the search category.\n- **Object/appearance matching:** each candidate box in a sampled frame is compared with the reference using 55 % MobileNetV2 feature similarity + 45 % HSV colour-histogram correlation. A frame matches only if the score reaches the precision threshold (Strict 72 %, Balanced 65 %, Tolerant 55 %) and the colour correlation is at least 50 %.\n- **Reference videos:** up to 5 evenly spaced frames are used as references; a candidate matches if it matches any of them.\n- Matches less than 2 seconds apart are merged.\nDimensions, timestamps or file names are never used to decide a match."
+  },
+  {
+   "id": "matching-timestamps-and-similarity-scores",
+   "title": "Matching timestamps and similarity scores",
+   "keywords": "where is the timestamp, matching frame, frame number, similarity percentage, seek to match, results list, match time",
+   "body": "After a search, each match shows its **timestamp** (MM:SS), **frame number**, **similarity** (the matching score above) and a thumbnail with the matched box. Tap a match to jump the video player to that moment. If nothing reaches the threshold, the app shows **No matching frames** – this is a genuine result, not an error. Tap **New search** to try other videos."
+  },
+  {
+   "id": "video-upload-failed",
+   "title": "Video upload failed",
+   "keywords": "upload failed, video error, cannot upload, video too large, corrupt video, timeout, unsupported format, troubleshoot upload",
+   "body": "- Check that the backend is **online** (green API light in the app bar).\n- Supported videos: mp4, mov, avi, mkv, webm, m4v, 3gp. Images: jpg, png, bmp, webp.\n- The server limit is 1 GB per file by default (`SMARTVISION_MAX_UPLOAD_MB`).\n- \"could not be opened\" means the file is corrupt or uses an unsupported codec – re-export it as H.264 mp4.\n- Large videos take longer: use 1 frame per second, keep the phone awake, and stay on the same Wi-Fi network.\n- \"The server is already processing videos\" means two searches are running; wait and retry."
+  },
+  {
+   "id": "register-a-face",
+   "title": "Register a face",
+   "keywords": "face registration, add a person, enroll face, register person, save face, new face, register name",
+   "body": "1. Open **Face Recognition → Register**.\n2. Enter the person's **name**.\n3. Tap **Capture** or **Choose** to get a clear, front-facing photo with exactly one face.\n4. The phone checks that one face is visible, then tap **Register face**.\n5. The backend saves the photo in its `known_faces` folder and rebuilds the SFace embeddings. Success is shown only after the server confirms the save. The person then appears under **People → Registered people**, where you can rename or delete them.\nRegistering the same name again adds another sample for that person. Registration needs the backend; the website and the app share the same registered people."
+  },
+  {
+   "id": "how-a-registered-face-is-identified",
+   "title": "How a registered face is identified",
+   "keywords": "face recognition, identify person, who is this person, recognise who someone is, identify someone, registered person, how does recognition work, embeddings, sface, yunet",
+   "body": "The backend detects faces with YuNet and turns each face into an SFace embedding. It compares the embedding with every registered person's samples using cosine similarity. A name is shown – **Registered Person: Name** – only when the best similarity is at least **0.363** and is at least 0.05 better than the next person. This is used on the Face Recognition screen and in Object Detection when a person is detected and the backend is online."
+  },
+  {
+   "id": "unknown-faces",
+   "title": "Unknown faces",
+   "keywords": "unknown face, not registered, stranger, unrecognised face, no match face, low confidence face",
+   "body": "If a face is detected but no registered person passes the threshold and margin, the app shows **Unknown Face**. Ambiguous or weak matches are never given a name. Detecting a face is not the same as identifying it: without the backend the phone can only say that a face is present."
+  },
+  {
+   "id": "delete-or-rename-a-person",
+   "title": "Delete or rename a person",
+   "keywords": "delete face, delete registered person, remove registered person, delete person, remove person, rename, edit name, forget face, privacy face data, wrong name",
+   "body": "Open **Face Recognition → People** (the **Registered people** list), tap the menu next to a name and choose **Rename** or **Delete**. Delete removes every saved photo of that person from the backend and rebuilds the recognition data, so the name can no longer be returned."
+  },
+  {
+   "id": "extract-text-with-ocr",
+   "title": "Extract text with OCR",
+   "keywords": "ocr, read text, scan document, text recognition, extract text from image, copy text, read aloud",
+   "body": "1. Open **OCR**.\n2. Tap **Camera** or **Upload** for a photo, or **Video OCR** / **Record Video** for a video.\n3. Google ML Kit reads the text on the phone. The text appears in an editable box – use **Copy** or the speaker button to read it aloud.\nVideo OCR samples one frame per second and shows progress; you can cancel it. The website uses EasyOCR on the server."
+  },
+  {
+   "id": "translate-extracted-text",
+   "title": "Translate extracted text",
+   "keywords": "translate, translation, language, convert text to hindi, other language, translate ocr",
+   "body": "After extracting text in **OCR**, choose a language (Hindi, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Spanish, French, German, Chinese, Japanese, Russian, Arabic) and tap **Translate**. Translation runs on the phone with ML Kit; the first time a language is used its model is downloaded, so internet is needed once."
+  },
+  {
+   "id": "summarize-extracted-text",
+   "title": "Summarize extracted text",
+   "keywords": "summarize, summary, summarise, shorten text, key points, tldr, brief",
+   "body": "In **OCR**, tap **Summarize** (a separate button from Translate). The app picks the most informative sentences (up to three) using the same word-frequency method as the backend `/summarize` endpoint. Very short text is returned unchanged."
+  },
+  {
+   "id": "drowsiness-monitor",
+   "title": "Drowsiness Monitor",
+   "keywords": "drowsiness, sleepy, fatigue, eyes closed, driver alert, siren, eye detection",
+   "body": "1. Open **Drowsiness Monitor** and tap **Start monitoring** (the front camera opens).\n2. ML Kit estimates how open your eyes are about six times per second.\n3. If your eyes stay closed longer than the alert time (default 1.0 s; eyes count as closed below 25 % open probability), the app shows **DROWSY**, speaks an alert and plays the siren (if enabled in Settings).\nYou can also analyse a recorded video. Monitoring only works while the screen is open and the app is in the foreground."
+  },
+  {
+   "id": "research-evaluation",
+   "title": "Research Evaluation",
+   "keywords": "research evaluation, evaluation results, metrics, accuracy, performance, benchmark, map, test results, model evaluation",
+   "body": "Research Evaluation is view-only. It shows evaluation results that already exist in the project, read from the backend:\n- detection accuracy per test scenario (precision, recall and F1 computed from expected vs detected classes),\n- latency benchmark (average FPS and latency),\n- distance-estimation error, OCR character/word error rates and the chatbot model test results,\n- mAP only if YOLO validation results exist (otherwise it says mAP has not been computed).\nIt never starts training. You can export the results. The phone can also run a separate on-device speed benchmark."
+  },
+  {
+   "id": "precision-recall-f1-and-map-explained",
+   "title": "Precision, recall, F1 and mAP explained",
+   "keywords": "difference between precision and recall, what is precision, what is recall, f1 score, mean average precision, true positive, false positive",
+   "body": "- **Precision** = correct detections ÷ all detections made. High precision means few false alarms.\n- **Recall** = correct detections ÷ all objects that should have been found. High recall means few missed objects.\n- **F1-score** is the harmonic mean of precision and recall.\n- **mAP** (mean average precision) averages precision over recall levels and classes, using box overlap (IoU); it requires a labelled validation run.\nIn Smart Vision's Research Evaluation, precision/recall are class-level: a scenario's detected labels are compared with its expected labels."
+  },
+  {
+   "id": "storage-used-by-the-application",
+   "title": "Storage used by the application",
+   "keywords": "how much storage, disk space, storage usage, size, memory used, space, how big, storage monitoring",
+   "body": "Open **AutoML & Dataset Pipeline → Storage**:\n- **Backend project folder:** measured file sizes by category – datasets, model weights, checkpoints & training artifacts, uploaded/captured media (recordings, detections, registered faces), generated reports, databases – each file counted once, with file counts, the server disk's free space and the time of measurement.\n- **This phone:** the size of the app's own files (database, documents, cache). The app does not measure the whole phone or any cloud quota.\nTap **Refresh** to measure again. Values that cannot be measured are shown as Unavailable."
+  },
+  {
+   "id": "training-validation-and-test-datasets",
+   "title": "Training, validation and test datasets",
+   "keywords": "training dataset, validation dataset, testing dataset, test set, train split, val split, dataset split, what is the training data",
+   "body": "- The **training set** is the data the model learns from.\n- The **validation set** is held out during training to tune and check the model.\n- The **test set** is used only at the end to measure performance on unseen data.\n**AutoML & Dataset Pipeline → Datasets** shows each dataset in the project (custom_objects, smart vision detection, classification, dummy classification) with the image count, label files, annotation count, size and percentage of every split, read from the dataset's YAML or folders. Splits that are not defined show **Not configured**; folders that are missing show **Not available**."
+  },
+  {
+   "id": "check-training-status",
+   "title": "Check training status",
+   "keywords": "training status, is the model training, training progress, epochs, training runs, last training, model artifacts",
+   "body": "Open **AutoML & Dataset Pipeline → Training**. It lists the YOLO runs found in `runs/` (model, dataset, configured epochs and whether results exist), the chatbot LoRA run metrics, and the saved model files. The backend has no training job manager, so the status shows no active job; training is run with the project scripts (`ai/train.py`, `scripts/train_and_evaluate.py`, notebooks). Opening the screen never starts training."
+  },
+  {
+   "id": "using-automl-dataset-pipeline",
+   "title": "Using AutoML & Dataset Pipeline",
+   "keywords": "automl, dataset pipeline, how to use automl, dataset analytics, storage analytics",
+   "body": "The page has three parts: **Storage** (measured disk usage by category), **Datasets** (split statistics) and **Training** (runs and artifacts). It reads everything from the backend; connect the backend in Settings first and tap **Refresh** to update. It is a monitoring page – it does not upload datasets or start training."
+  },
+  {
+   "id": "vision-chatbot",
+   "title": "Vision Chatbot",
+   "keywords": "chatbot, chat, ask questions, assistant, vision chatbot, what can the chatbot do",
+   "body": "The Vision Chatbot answers typed questions about the latest detections (\"what do you see?\", \"how many people?\", \"any hazards?\") and about how to use Smart Vision. When the backend is connected, answers come from the server assistant, which retrieves sections of this guide and uses Gemini or OpenAI if an API key is configured on the server. Offline, the phone answers from the same guide and from the latest local detections. Each answer says which engine answered. It does not invent detections."
+  },
+  {
+   "id": "voice-assistant",
+   "title": "Voice Assistant",
+   "keywords": "voice assistant, speak, microphone, voice command, talk to the app, speech",
+   "body": "Open **Voice Assistant** and tap the microphone (or type). You can ask questions (\"what do you see?\", \"how do I use OCR?\") or say commands: \"open object detection\", \"go to history\", \"turn on/off voice announcements\", \"reset voice announcements\". Answers are spoken aloud. Speech recognition uses the phone's speech service (it may need internet)."
+  },
+  {
+   "id": "detection-history",
+   "title": "Detection history",
+   "keywords": "history, past detections, saved results, previous scans, records, logs, where are my results",
+   "body": "Open **History** from the bottom bar or the drawer. It lists saved detections and analyses (image/video detection, OCR, video review, drowsiness, face recognition, benchmarks) stored in the phone's local database. Tap a record for details or use the delete button to clear history."
+  },
+  {
+   "id": "settings",
+   "title": "Settings",
+   "keywords": "settings, preferences, configure, options, voice settings, language, backend url, siren",
+   "body": "Settings contains: voice announcements and speech rate, detection thresholds, the hazard/drowsiness siren, the translation language, the **Backend Server** address, on-device model status, storage clean-up and camera permission status."
+  },
+  {
+   "id": "backend-connection",
+   "title": "Backend connection",
+   "keywords": "backend disconnected, server offline, api offline, cannot connect to server, connection failed, server url, localhost, ip address, network error",
+   "body": "The coloured **Server** light in the app bar shows the real server status (green online, red offline, grey not configured). Tap it for details. To connect:\n1. On the computer run `uvicorn ai_server:app --host 0.0.0.0 --port 8000`.\n2. Find the computer's Wi-Fi IP address (for example 192.168.1.20).\n3. In the app open **Settings → Backend Server**, enter `http://192.168.1.20:8000` and tap **Save & test**.\nDo not use `localhost` on a phone – it means the phone itself. The Android emulator uses `http://10.0.2.2:8000`. Phone and computer must be on the same network and the firewall must allow port 8000."
+  },
+  {
+   "id": "features-that-need-internet-or-the-backend",
+   "title": "Features that need internet or the backend",
+   "keywords": "offline, internet required, works without internet, which features need server, online features",
+   "body": "Work fully on the phone without a server: object detection (live, image, video), Fast Video Review by object category, OCR, summarization, drowsiness monitoring, History, on-device chatbot answers.\nNeed the Smart Vision backend: face registration and identity recognition, Fast Video Review with a reference image/video, Research Evaluation results, AutoML & Dataset Pipeline, server chatbot answers.\nNeed internet: first use of each translation language (model download), voice speech recognition on most phones, and Gemini/OpenAI answers on the server."
+  },
+  {
+   "id": "hazard-alerts",
+   "title": "Hazard alerts",
+   "keywords": "hazard, danger, knife, scissors, weapon alert, siren, safety",
+   "body": "Knife and scissors detections are drawn in red and trigger a spoken warning and the siren (if enabled in Settings). The Hazard Alerts page lists hazards in the latest result. The COCO model has no gun or fire classes."
+  },
+  {
+   "id": "meet-the-builders",
+   "title": "Meet the Builders",
+   "keywords": "builders, team, who made this, who built this app, built, made this app, created by, developers, creators, about the team, contact",
+   "body": "**Meet the Builders – The team behind Smart Vision** is available from the MORE section of the drawer on the phone and from the sidebar on the website. Each profile shows only a photo, name, an approved mobile number and a short description. Profiles are configured in `assets/builders/builders.json`."
+  },
+  {
+   "id": "known-limitations-and-planned-features",
+   "title": "Known limitations and planned features",
+   "keywords": "limitations, not supported, missing feature, planned, roadmap, cannot do, does not work, tracking ids",
+   "body": "- The phone uses YOLOv8n (320×320); the backend's YOLOv8m is more accurate.\n- Face identity needs the backend; the phone does not recognise people on its own.\n- Object tracking IDs, restricted-area (border) analytics and email/Telegram alerts are website-only features.\n- Monitoring stops when the app is in the background (Android camera rules).\n- The chatbot is not fine-tuned on Smart Vision; it retrieves this guide before answering."
+  }
+ ]
+}

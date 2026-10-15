@@ -8,25 +8,31 @@ def apply_theme():
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
         :root {
-          --bg: #0B1230;
-          --bg-2: #101935;
-          --panel: #121A3D;
-          --panel-strong: rgba(15, 22, 46, 0.98);
-          --card: #121A3D;
-          --card-soft: rgba(24, 34, 68, 0.88);
-          --border: rgba(56, 189, 248, 0.25);
+          /* Website palette (keep in sync with .streamlit/config.toml) */
+          --bg: #0B1228;
+          --bg-2: #0E1631;
+          --panel: #111B36;
+          --panel-strong: #111B36;
+          --card: #111B36;
+          --card-soft: rgba(17, 27, 54, 0.88);
+          --surface-raised: #16234A;
+          --border: #263B61;
+          --border-strong: #38598F;
           --primary: #38BDF8;
+          --primary-hover: #7DD3FC;
           --accent: #7C3AED;
-          --success: #22C55E;
-          --warning: #F59E0B;
-          --danger: #EF4444;
-          --text: #E6EEFF;
-          --muted: #B8C7E5;
+          --success: #34D399;
+          --warning: #FBBF24;
+          --danger: #F87171;
+          --text: #F1F5F9;
+          --muted: #B8C4D9;
+          --on-primary: #0B1228;
           --shadow: rgba(56, 189, 248, 0.18);
-          --shadow-accent: rgba(124, 58, 237, 0.2);
+          --shadow-accent: rgba(56, 189, 248, 0.22);
           --header-font: 'Rajdhani', 'Orbitron', 'Segoe UI', sans-serif;
           --body-font: 'Inter', 'Segoe UI', sans-serif;
           --mono-font: 'JetBrains Mono', 'Consolas', monospace;
+          --icon-font: 'Material Symbols Rounded';
           --font-size-base: 15px;
           --font-size-label: 14px;
           --font-size-small: 13px;
@@ -132,6 +138,12 @@ def apply_theme():
         }
 
         .stApp div[data-testid="stMetricValue"],
+        .stApp .kpi-label {
+          color: var(--muted) !important;
+          font-size: var(--font-size-label) !important;
+          font-weight: 600;
+        }
+
         .stApp .kpi-value {
           font-family: var(--header-font) !important;
           font-size: var(--font-size-metric) !important;
@@ -248,14 +260,14 @@ def apply_theme():
         }
 
         [data-testid="stHeader"] {
-          background: rgba(11, 18, 48, 0.6);
+          background: rgba(11, 18, 40, 0.72);
           backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
         [data-testid="stSidebar"] {
-          background: linear-gradient(180deg, rgba(11, 18, 48, 0.96), rgba(13, 20, 42, 0.96));
-          border-right: 1px solid rgba(56, 189, 248, 0.18);
+          background: var(--panel);
+          border-right: 1px solid var(--border);
           box-shadow: 16px 0 36px rgba(0,0,0,0.14);
         }
 
@@ -435,47 +447,147 @@ def apply_theme():
           padding-top: 0.5rem;
         }
 
+        /* Logo: no frame, border, shadow or background box. The artwork has an
+           opaque navy background, so it is blended with "lighten": wherever the
+           logo is darker than the sidebar the sidebar shows through, and the
+           bright artwork is unchanged. Aspect ratio is preserved. */
         .sidebar-logo {
           display: flex;
+          justify-content: center;
           align-items: center;
-          gap: 0.7rem;
-          margin: 0.25rem 0 0.25rem;
+          margin: 0.25rem 0 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
         }
 
-        .sidebar-logo img {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
-          box-shadow: 0 0 18px rgba(124,58,237,0.35);
+        .sidebar-logo .sidebar-logo-img {
+          display: block;
+          width: 100%;
+          max-width: 190px;
+          height: auto;
+          aspect-ratio: auto;
+          object-fit: contain;
+          border: 0 !important;
+          border-radius: 0 !important;
+          outline: none;
+          box-shadow: none !important;
+          background: transparent;
+          mix-blend-mode: lighten;
+        }
+
+        .sidebar-brand-block {
+          text-align: center;
+          margin: 0.15rem 0 0.9rem;
         }
 
         .sidebar-brand {
           font-family: var(--header-font);
-          font-size: 0.8rem;
-          letter-spacing: 0.22rem;
+          font-size: 1rem;
+          letter-spacing: 0.24rem;
           font-weight: 800;
-          color: var(--text);
-          margin: 0;
+          color: var(--text) !important;
+          margin: 0 !important;
         }
 
         .sidebar-tagline {
-          margin: 0.12rem 0 1rem;
-          font-size: var(--font-size-small);
-          color: var(--muted);
-          letter-spacing: 0.08rem;
+          margin: 0.15rem 0 0;
+          font-size: 11.5px;
+          color: var(--muted) !important;
+          letter-spacing: 0.12rem;
           text-transform: uppercase;
         }
 
+        [data-testid="stSidebar"] .model-info-title {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          margin-bottom: 0.45rem;
+          color: var(--text);
+          font-weight: 700;
+          font-size: var(--font-size-label);
+        }
+
+        [data-testid="stSidebar"] .model-info-title .sv-icon {
+          font-size: 18px;
+          color: var(--success);
+        }
+
+        /* Material Symbols used in widget labels (navigation, toggles, buttons) */
+        .stApp [data-testid="stIconMaterial"],
+        .stApp [data-testid="stMarkdownContainer"] span[role="img"][translate="no"] {
+          font-size: 20px !important;
+          line-height: 1 !important;
+          color: var(--primary) !important;
+          vertical-align: middle !important;
+        }
+
+        /* Sidebar navigation: every item spans the full sidebar width */
+        [class*="st-key-secondary-feature-navigation"] [data-testid="stElementContainer"],
+        [class*="st-key-ai-tools-feature-navigation"] [data-testid="stElementContainer"],
+        [class*="st-key-secondary-feature-navigation"] .stRadio,
+        [class*="st-key-ai-tools-feature-navigation"] .stRadio,
+        [class*="st-key-secondary-feature-navigation"] [data-testid="stRadioGroup"],
+        [class*="st-key-ai-tools-feature-navigation"] [data-testid="stRadioGroup"],
+        [class*="st-key-secondary-feature-navigation"] [data-testid="stRadioGroup"] > div,
+        [class*="st-key-ai-tools-feature-navigation"] [data-testid="stRadioGroup"] > div {
+          width: 100% !important;
+          max-width: none !important;
+        }
+
+        [class*="st-key-secondary-feature-navigation"] [data-testid="stRadioGroup"],
+        [class*="st-key-ai-tools-feature-navigation"] [data-testid="stRadioGroup"] {
+          align-items: stretch !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadioOption"] [data-testid="stMarkdownContainer"] p,
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"] [data-testid="stMarkdownContainer"] p {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          line-height: 1.3 !important;
+        }
+
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"] [data-testid="stMarkdownContainer"] p {
+          justify-content: center;
+          gap: 0.45rem;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadioOption"] span[role="img"][translate="no"],
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"] span[role="img"][translate="no"] {
+          flex: 0 0 20px;
+          width: 20px;
+          color: var(--muted) !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadioOption"][data-selected="true"] span[role="img"][translate="no"],
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"][data-selected="true"] span[role="img"][translate="no"],
+        [data-testid="stSidebar"] [data-testid="stRadioOption"]:hover span[role="img"][translate="no"],
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"]:hover span[role="img"][translate="no"] {
+          color: var(--primary) !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadioOption"][data-selected="true"] p,
+        [class*="st-key-feature-navigation"] [data-testid="stRadioOption"][data-selected="true"] p {
+          font-weight: 700 !important;
+        }
+
         .nav-section {
-          margin-top: 0.7rem;
-          margin-bottom: 0.35rem;
+          margin-top: 0.9rem;
+          margin-bottom: 0.4rem;
           padding-left: 0.75rem;
           text-align: left;
           color: var(--muted);
-          font-size: var(--font-size-small);
-          letter-spacing: 0.12rem;
+          font-size: 12px;
+          letter-spacing: 0.14rem;
           text-transform: uppercase;
           font-weight: 700;
+        }
+
+        .nav-section.nav-section-divided {
+          margin-top: 1.1rem;
+          padding-top: 0.9rem;
+          border-top: 1px solid var(--border);
         }
 
         [data-testid="stSidebar"] [data-testid="stRadioOption"] {
@@ -539,7 +651,7 @@ def apply_theme():
         }
 
         [data-testid="stSidebar"] .stRadio label:hover {
-          border-color: rgba(56, 189, 248, 0.2);
+          border-color: var(--border);
           background: rgba(18,26,61,0.78);
           transform: translateX(2px);
         }
@@ -575,7 +687,9 @@ def apply_theme():
           color: var(--text);
         }
 
-        .stButton > button {
+        .stButton button,
+        .stDownloadButton button,
+        .stFormSubmitButton button {
           min-height: 44px !important;
           border: 1px solid var(--border) !important;
           border-radius: var(--control-radius) !important;
@@ -590,34 +704,64 @@ def apply_theme():
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .stButton > button:hover {
+        .stButton button:hover,
+        .stDownloadButton button:hover,
+        .stFormSubmitButton button:hover {
           border-color: var(--primary) !important;
           background: rgba(56, 189, 248, 0.1) !important;
           color: var(--text) !important;
           box-shadow: 0 0 16px var(--shadow) !important;
         }
 
-        .stButton > button[kind="primary"] {
-          border: 1px solid transparent !important;
-          background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
-          color: var(--bg) !important;
+        .stButton button[kind="primary"],
+        .stDownloadButton button[kind="primary"],
+        .stFormSubmitButton button[kind="primary"] {
+          border: 1px solid var(--primary) !important;
+          background: var(--primary) !important;
+          color: var(--on-primary) !important;
           box-shadow: 0 8px 20px var(--shadow-accent) !important;
         }
 
-        .stButton > button[kind="primary"]:hover {
-          background: linear-gradient(135deg, var(--accent), var(--primary)) !important;
-          color: var(--text) !important;
+        .stButton button[kind="primary"] *,
+        .stDownloadButton button[kind="primary"] *,
+        .stFormSubmitButton button[kind="primary"] * {
+          color: var(--on-primary) !important;
         }
 
-        .stButton > button:disabled,
-        .stButton > button[disabled] {
-          opacity: 0.45 !important;
+        .stButton button[kind="primary"]:hover,
+        .stDownloadButton button[kind="primary"]:hover,
+        .stFormSubmitButton button[kind="primary"]:hover {
+          border-color: var(--primary-hover) !important;
+          background: var(--primary-hover) !important;
+          color: var(--on-primary) !important;
+        }
+
+        .stButton button:focus-visible,
+        .stDownloadButton button:focus-visible,
+        [data-testid="stCameraInputButton"]:focus-visible {
+          outline: 2px solid var(--primary) !important;
+          outline-offset: 2px !important;
+        }
+
+        .stButton button:disabled *,
+        .stButton button[disabled] *,
+        .stApp .stButton button:disabled [data-testid="stIconMaterial"],
+        .stApp .stButton button[disabled] [data-testid="stIconMaterial"] {
+          color: #8A99B8 !important;
+        }
+
+        .stButton button:disabled,
+        .stButton button[disabled] {
+          opacity: 1 !important;
+          color: #8A99B8 !important;
+          border: 1px dashed var(--border) !important;
+          background: transparent !important;
           cursor: not-allowed !important;
           box-shadow: none !important;
           transform: none !important;
         }
 
-        [data-testid="stSidebar"] .stButton > button {
+        [data-testid="stSidebar"] .stButton button {
           min-width: 0 !important;
           width: 100% !important;
           padding: 0.4rem 0.3rem !important;
@@ -704,7 +848,7 @@ def apply_theme():
         }
 
         .stTabs [role="tablist"] {
-          border-bottom: 1px solid rgba(148, 163, 200, 0.15);
+          border-bottom: 1px solid var(--border);
         }
 
         .stTabs [role="tab"] {
@@ -714,12 +858,12 @@ def apply_theme():
 
         .stTabs [role="tab"][aria-selected="true"] {
           background: rgba(56, 189, 248, 0.12);
-          border-color: rgba(56, 189, 248, 0.2);
+          border-color: var(--border);
           color: var(--text);
         }
 
         .stExpander {
-          border: 1px solid rgba(56, 189, 248, 0.16);
+          border: 1px solid var(--border);
           border-radius: 14px;
           background: rgba(15,22,46,0.4);
         }
@@ -741,6 +885,16 @@ def apply_theme():
 
         [data-testid="stMain"] .card-box {
           padding: 1rem !important;
+        }
+
+        /* Opening-tag-only markdown wrappers (st.markdown("<div class='card-box'>"))
+           render as empty boxes in Streamlit; hide those instead of showing bars. */
+        .stApp .card-box:empty,
+        .stApp [data-testid="stMarkdownContainer"]:has(> .card-box:empty) {
+          display: none !important;
+        }
+        .stApp [data-testid="stElementContainer"]:has(.card-box:empty) {
+          display: none !important;
         }
 
         [data-testid="stMain"] .kpi-card {
@@ -823,6 +977,91 @@ def apply_theme():
           font-size: 20px !important;
         }
 
+        [data-testid="stMain"] .dashboard-panel-title {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          margin: 0 0 0.6rem;
+          color: var(--text);
+          font-size: 15px;
+          font-weight: 700;
+        }
+
+        [data-testid="stMain"] .dashboard-panel-title .sv-icon { font-size: 19px; }
+
+        [data-testid="stMain"] .dashboard-recent-heading b {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+        }
+
+        [data-testid="stMain"] .kpi-number {
+          font-family: var(--header-font);
+          font-size: 40px;
+          font-weight: 700;
+          line-height: 1.1;
+          color: var(--text);
+        }
+
+        [data-testid="stMain"] .kpi-ring {
+          display: grid;
+          place-items: center;
+          flex: 0 0 60px;
+          width: 60px;
+          height: 60px;
+          border: 2px dashed var(--success);
+          border-radius: 50%;
+          background: rgba(52, 211, 153, 0.12);
+        }
+
+        [data-testid="stMain"] .kpi-ring .sv-icon { color: var(--success); font-size: 26px; }
+
+        [data-testid="stMain"] .detected-row {
+          display: grid;
+          grid-template-columns: 1fr auto 4.2rem;
+          gap: 0.75rem;
+          align-items: center;
+          padding: 0.45rem 0.2rem;
+          border-bottom: 1px solid var(--border);
+          color: var(--text);
+          font-size: 14px;
+        }
+
+        [data-testid="stMain"] .detected-row:last-child { border-bottom: 0; }
+        [data-testid="stMain"] .detected-name { font-weight: 600; overflow-wrap: anywhere; }
+        [data-testid="stMain"] .detected-count { font-family: var(--mono-font); font-weight: 700; }
+        [data-testid="stMain"] .detected-pct { color: var(--muted); text-align: right; font-family: var(--mono-font); }
+
+        [data-testid="stMain"] .camera-help {
+          display: flex;
+          gap: 0.6rem;
+          align-items: flex-start;
+          margin: 0.6rem 0 0.2rem;
+          padding: 0.7rem 0.85rem;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          background: var(--card);
+          color: var(--muted);
+          font-size: 13px;
+          line-height: 1.55;
+        }
+
+        [data-testid="stMain"] .camera-help b { color: var(--text); }
+        [data-testid="stMain"] .camera-help code {
+          color: var(--primary);
+          background: rgba(56, 189, 248, 0.1);
+          padding: 0 0.25rem;
+          border-radius: 4px;
+        }
+
+        [data-testid="stMain"] .dashboard-empty-state .sv-icon { font-size: 22px; }
+
+        /* Webcam "Take Photo" button matches the other secondary buttons */
+        [data-testid="stCameraInputButton"]:hover {
+          border-color: var(--primary) !important;
+          background: rgba(56, 189, 248, 0.1) !important;
+        }
+
         [data-testid="stCameraInput"],
         [data-testid="stCameraInputWebcamComponent"],
         [data-testid="stCameraInputWebcamStyledBox"] {
@@ -884,7 +1123,7 @@ def apply_theme():
           gap: 1rem;
         }
 
-        [data-testid="stMain"] [data-testid="stHorizontalBlock"] .stButton > button {
+        [data-testid="stMain"] [data-testid="stHorizontalBlock"] .stButton button {
           min-height: 44px !important;
           width: 100% !important;
           padding: 0.35rem 0.4rem !important;
@@ -898,7 +1137,7 @@ def apply_theme():
           align-items: center;
           gap: 1rem;
           padding: 1rem 1.2rem;
-          border: 1px solid rgba(56,189,248,0.18);
+          border: 1px solid var(--border);
           background: linear-gradient(135deg, rgba(17, 24, 39, 0.84), rgba(17, 24, 39, 0.65));
           border-radius: 18px;
           margin-bottom: 1.15rem;
@@ -912,7 +1151,7 @@ def apply_theme():
           place-items: center;
           border-radius: 14px;
           background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(124,58,237,0.22));
-          border: 1px solid rgba(56,189,248,0.24);
+          border: 1px solid var(--border);
           font-size: 1.4rem;
           color: var(--primary);
         }
@@ -962,7 +1201,7 @@ def apply_theme():
 
         .metric-card {
           background: linear-gradient(180deg, rgba(18,26,61,0.9), rgba(15,22,46,0.8));
-          border: 1px solid rgba(56, 189, 248, 0.18);
+          border: 1px solid var(--border);
           border-radius: 16px;
           padding: 1rem 1rem 0.9rem;
           box-shadow: 0 12px 24px rgba(11, 18, 48, 0.18);
@@ -971,7 +1210,7 @@ def apply_theme():
 
         .metric-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(56, 189, 248, 0.35);
+          border-color: var(--border);
         }
 
         .metric-icon {
@@ -1027,7 +1266,7 @@ def apply_theme():
           align-items: center;
           gap: 0.7rem;
           background: rgba(15, 22, 46, 0.8);
-          border: 1px solid rgba(56,189,248,0.15);
+          border: 1px solid var(--border);
           border-radius: 12px;
           padding: 0.55rem 0.7rem;
           color: var(--text);
@@ -1056,7 +1295,7 @@ def apply_theme():
 
         .card-surface {
           background: linear-gradient(180deg, rgba(18,26,61,0.82), rgba(15,22,46,0.8));
-          border: 1px solid rgba(56,189,248,0.14);
+          border: 1px solid var(--border);
           border-radius: 16px;
           padding: 1rem;
           box-shadow: 0 18px 40px rgba(11,18,48,0.16);
@@ -1111,7 +1350,7 @@ def apply_theme():
         .stDataFrame {
           border-radius: 14px;
           overflow: hidden;
-          border: 1px solid rgba(56,189,248,0.14);
+          border: 1px solid var(--border);
         }
 
         ::-webkit-scrollbar {
@@ -1141,7 +1380,7 @@ def apply_theme():
           .page-header { flex-wrap: wrap; }
           .status-pill { margin-left: auto; }
           [data-testid="stMain"] .section-title { font-size: 28px !important; }
-          [data-testid="stMain"] [data-testid="stHorizontalBlock"] .stButton > button {
+          [data-testid="stMain"] [data-testid="stHorizontalBlock"] .stButton button {
             padding: 0.3rem 0.2rem !important;
           }
           [class*="st-key-feature-navigation"] {

@@ -7,7 +7,7 @@
 [![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B.svg)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-SmartVision includes a Streamlit website and FastAPI AI backend, plus a Flutter mobile app. The mobile app runs object detection, OCR, translation and drowsiness monitoring on the device; the FastAPI server is optional and adds face identity recognition, the server-side chatbot and dataset information. See [MOBILE_APP_REPAIR_REPORT.md](MOBILE_APP_REPAIR_REPORT.md) for the October 2026 mobile repair.
+SmartVision includes a Streamlit website and FastAPI AI backend, plus a Flutter mobile app. The mobile app runs object detection, OCR, translation and drowsiness monitoring on the device; the FastAPI server is optional and adds face identity recognition, the server-side chatbot and dataset information. See [MOBILE_APP_REPAIR_REPORT.md](MOBILE_APP_REPAIR_REPORT.md) and [SMART_VISION_UPDATE_REPORT.md](SMART_VISION_UPDATE_REPORT.md) for the October 2026 updates.
 
 ---
 
@@ -21,7 +21,7 @@ SmartVision includes a Streamlit website and FastAPI AI backend, plus a Flutter 
 - **Optical Character Recognition (OCR):** Embedded EasyOCR engine for document screening and text reading.
 - **Voice Assistant & Audio Guidance:** Hands-free speech alerts, spoken questions about the current detections, and voice commands for dashboard navigation and settings.
 - **Interactive Web Dashboard:** Rich Streamlit interface featuring 3D visualizations, live analytics, and detection histories.
-- **Android Mobile App:** Flutter uses the bundled YOLOv8n TFLite model (`[1,3,320,320]` input) for live camera, photo and video detection, ML Kit for on-device OCR, translation, face and eye detection, and local history. It optionally connects to the FastAPI backend for face identity recognition/registration, the Vision Chatbot provider and the AutoML dataset view.
+- **Android Mobile App:** Flutter uses the bundled YOLOv8n TFLite model (`[1,3,320,320]` input) for live camera, photo and video detection, ML Kit for on-device OCR, translation, face and eye detection, and local history. It optionally connects to the FastAPI backend for face identity recognition/registration, Fast Video Review with a reference image/video, the Vision Chatbot provider, Research Evaluation results and the AutoML & Dataset Pipeline view.
 
 ---
 
@@ -129,7 +129,7 @@ on your computer, then in the app open **Settings → Backend Server** and enter
 `http://<your-computer-LAN-IP>:8000` (on the Android emulator use
 `http://10.0.2.2:8000`; never `localhost` on a phone). You can also bake a URL
 into a build with `--dart-define=SMARTVISION_API_URL=http://192.168.1.20:8000`.
-The app bar's **AI / API** lights show the real model and server status.
+The app bar's **Model / Server** lights show the real model and server status.
 
 1. **Navigate to the Flutter directory:**
    ```bash
@@ -172,6 +172,9 @@ Mobile inference latency depends on the Android device. The mobile app uses the 
 - [Implemented Features](FEATURES_IMPLEMENTED.md)
 - [Test Report](TEST_REPORT.md)
 - [Mobile App Repair Report (Oct 2026)](MOBILE_APP_REPAIR_REPORT.md)
+- [Update Report: reference video search, face registry, builders, chatbot guide (Oct 2026)](SMART_VISION_UPDATE_REPORT.md)
+- [Chatbot knowledge base](knowledge/smartvision_knowledge.md) · [evaluation](knowledge/chatbot_evaluation.md)
+- [Meet the Builders profiles](assets/builders/README.md)
 - [Project Synopsis PDF](SmartVision_AI_Synopsis.pdf)
 
 ---

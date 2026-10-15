@@ -11,7 +11,8 @@ import cv2
 import numpy as np
 import base64
 from typing import Optional, Dict, Any, List, Union
-from fastapi import FastAPI, HTTPException, Body, Query
+from fastapi import FastAPI, HTTPException, Body, Query, UploadFile, File, Form
+from fastapi.responses import FileResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -152,7 +153,8 @@ async def system_info():
         "status": "healthy",
         "detection_model": os.path.basename(MODEL_PATH),
         "ocr_available": ocr_reader is not None,
-        "face_recognition_available": face_service is not None,
+        "face_recognition_available": face_service is not None and face_service.is_available(),
+        "reference_search_available": os.path.exists("MobileNET_best.pth"),
         "open_vocabulary_available": world_model is not None,
     }
 
@@ -748,6 +750,266 @@ def drowsiness_video(req: DrowsinessVideoRequest):
             os.unlink(video_path)
         except OSError:
             pass
+
+
+# ---------------------------------------------------------------------------
+# Mobile-app additions (October 2026). All endpoints below are new; existing
+# endpoints and their request/response formats are unchanged.
+# ---------------------------------------------------------------------------
+from pathlib import Path as _Path
+
+from services import project_insights
+from services.reference_search_jobs import ReferenceSearchJobs, MAX_ACTIVE_JOBS
+
+MAX_UPLOAD_MB = int(os.environ.get("SMARTVISION_MAX_UPLOAD_MB", "1024"))
+_VIDEO_EXT = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v", ".3gp"}
+_IMAGE_EXT = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+
+def _face_registry():
+    """Registered people in the shared known_faces/ folder (same as the website)."""
+    faces_dir = getattr(face_service, "faces_dir", "known_faces")
+    people: Dict[str, Dict[str, Any]] = {}
+    import re as _re
+    if os.path.isdir(faces_dir):
+        for filename in sorted(os.listdir(faces_dir)):
+            stem, ext = os.path.splitext(filename)
+            if ext.lower() not in (".png", ".jpg", ".jpeg"):
+                continue
+            name = _re.sub(r"_\d+$", "", stem)
+            entry = people.setdefault(name, {"name": name, "samples": 0, "files": []})
+            entry["samples"] += 1
+            entry["files"].append(filename)
+    embedded = set(getattr(face_service, "person_embeddings", {}) or {}) if face_service else set()
+    for entry in people.values():
+        entry["has_embedding"] = entry["name"] in embedded
+    return faces_dir, sorted(people.values(), key=lambda e: e["name"].lower())
+
+
+def _face_available() -> bool:
+    return face_service is not None and face_service.is_available()
+
+
+@app.get('/face/registered')
+def list_registered_faces():
+    """People registered for recognition (website + mobile share this list)."""
+    faces_dir, people = _face_registry()
+    return {
+        "recognition_available": _face_available(),
+        "threshold": 0.363,
+        "storage": faces_dir,
+        "people": [{k: v for k, v in p.items() if k != "files"} for p in people],
+    }
+
+
+@app.delete('/face/registered/{name}')
+def delete_registered_face(name: str):
+    if not name.strip():
+        raise HTTPException(status_code=400, detail="Missing name.")
+    if face_service is None:
+        raise HTTPException(status_code=503, detail="Face service is unavailable on this server.")
+    deleted = face_service.delete_face(name)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"No registered person named '{name}'.")
+    return {"status": "deleted", "name": name, "removed_samples": len(deleted)}
+
+
+class FaceRenameRequest(BaseModel):
+    new_name: str
+
+
+@app.post('/face/registered/{name}/rename')
+def rename_registered_face(name: str, req: FaceRenameRequest):
+    import re as _re
+    new_name = req.new_name.strip()
+    if not new_name or not _re.fullmatch(r"[\w .'-]{1,60}", new_name):
+        raise HTTPException(status_code=400, detail="Use 1-60 letters, digits, spaces, . ' - or _.")
+    faces_dir, people = _face_registry()
+    person = next((p for p in people if p["name"] == name), None)
+    if person is None:
+        raise HTTPException(status_code=404, detail=f"No registered person named '{name}'.")
+    if new_name != name and any(p["name"] == new_name for p in people):
+        raise HTTPException(status_code=409, detail=f"'{new_name}' is already registered.")
+    for index, filename in enumerate(person["files"]):
+        ext = os.path.splitext(filename)[1].lower()
+        os.replace(os.path.join(faces_dir, filename), os.path.join(faces_dir, f"{new_name}_{index}{ext}"))
+    if face_service is not None:
+        face_service.train_model()
+    return {"status": "renamed", "old_name": name, "new_name": new_name}
+
+
+@app.post('/face/recognize_all')
+async def recognize_all_faces(req: ImageRequest):
+    """Like /face/recognize but returns every face (largest first)."""
+    if not _face_available():
+        raise HTTPException(status_code=503, detail="Face recognition models are not available on this server.")
+    try:
+        img = decode_image(req.image)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    faces = []
+    for name, similarity, box in face_service.recognize_faces(img):
+        registered = name != "Not Registered"
+        faces.append({
+            "name": name if registered else None,
+            "registered": registered,
+            "similarity": round(float(similarity), 4),
+            "box": [int(v) for v in box],  # x, y, width, height
+        })
+    h, w = img.shape[:2]
+    return {"faces": faces, "image_width": w, "image_height": h, "threshold": 0.363}
+
+
+@app.get('/storage/summary')
+def storage_summary():
+    """Measured storage of the backend project folder, by category."""
+    return project_insights.storage_summary(".")
+
+
+@app.get('/dataset/splits')
+def dataset_splits():
+    return {"datasets": project_insights.dataset_splits(".")}
+
+
+@app.get('/training/status')
+def training_status():
+    return project_insights.training_runs(".")
+
+
+@app.get('/evaluation/results')
+def evaluation_results():
+    return project_insights.evaluation_results(".")
+
+
+@app.get('/evaluation/report/{name:path}', response_class=PlainTextResponse)
+def evaluation_report(name: str):
+    text = project_insights.read_report(name, ".")
+    if text is None:
+        raise HTTPException(status_code=404, detail="Report not found.")
+    return text
+
+
+def _make_reference_engine():
+    from services.video_reference_search import ReferenceSearchEngine
+    return ReferenceSearchEngine(MODEL_PATH, face_service=face_service)
+
+
+reference_jobs = ReferenceSearchJobs(_make_reference_engine)
+
+
+async def _save_upload(upload: UploadFile, destination: _Path, allowed_ext: set) -> int:
+    ext = os.path.splitext(upload.filename or "")[1].lower()
+    if ext not in allowed_ext:
+        raise HTTPException(status_code=400, detail=f"Unsupported file type '{ext or 'none'}' for {upload.filename}.")
+    written = 0
+    limit = MAX_UPLOAD_MB * 1024 * 1024
+    with destination.open("wb") as handle:
+        while True:
+            chunk = await upload.read(1024 * 1024)
+            if not chunk:
+                break
+            written += len(chunk)
+            if written > limit:
+                raise HTTPException(status_code=413, detail=f"{upload.filename} is larger than {MAX_UPLOAD_MB} MB.")
+            handle.write(chunk)
+    if written == 0:
+        raise HTTPException(status_code=400, detail=f"{upload.filename} is empty.")
+    return written
+
+
+def _validate_video(path: _Path, label: str) -> None:
+    cap = cv2.VideoCapture(str(path))
+    try:
+        if not cap.isOpened():
+            raise HTTPException(status_code=400, detail=f"The {label} could not be opened (corrupt or unsupported codec).")
+        ok, _ = cap.read()
+        if not ok:
+            raise HTTPException(status_code=400, detail=f"No frames could be read from the {label}.")
+    finally:
+        cap.release()
+
+
+@app.post('/video/reference_search')
+async def start_reference_search(
+    video: UploadFile = File(...),
+    reference: Optional[UploadFile] = File(None),
+    category: str = Form(""),
+    precision: str = Form("strict"),
+    sample_rate: int = Form(1),
+    confidence: float = Form(0.4),
+    rotation: int = Form(0),
+    restrict_category: bool = Form(True),
+):
+    """Fast Video Review with a reference image or reference video (website algorithm).
+
+    Returns a job id immediately; poll GET /video/reference_search/{job_id}.
+    """
+    if precision not in ("strict", "balanced", "tolerant"):
+        raise HTTPException(status_code=400, detail="precision must be strict, balanced or tolerant.")
+    if not 1 <= sample_rate <= 5:
+        raise HTTPException(status_code=400, detail="sample_rate must be between 1 and 5 frames per second.")
+    if not 0.1 <= confidence <= 1.0:
+        raise HTTPException(status_code=400, detail="confidence must be between 0.1 and 1.0.")
+    if rotation not in (0, 90, 180, 270):
+        raise HTTPException(status_code=400, detail="rotation must be 0, 90, 180 or 270.")
+    if reference is None and not category.strip():
+        raise HTTPException(status_code=400, detail="Provide a reference image/video or an object category.")
+    if reference_jobs.active_count() >= MAX_ACTIVE_JOBS:
+        raise HTTPException(status_code=429, detail="The server is already processing videos. Try again shortly.")
+
+    job_dir = reference_jobs.new_job_dir()
+    try:
+        video_path = job_dir / ("target" + os.path.splitext(video.filename or ".mp4")[1].lower())
+        await _save_upload(video, video_path, _VIDEO_EXT)
+        _validate_video(video_path, "video")
+        reference_path = None
+        reference_kind = None
+        if reference is not None:
+            ext = os.path.splitext(reference.filename or "")[1].lower()
+            reference_kind = "video" if ext in _VIDEO_EXT else "image"
+            reference_path = job_dir / ("reference" + ext)
+            await _save_upload(reference, reference_path, _VIDEO_EXT | _IMAGE_EXT)
+            if reference_kind == "video":
+                _validate_video(reference_path, "reference video")
+            elif cv2.imread(str(reference_path)) is None:
+                raise HTTPException(status_code=400, detail="The reference image could not be decoded.")
+    except HTTPException:
+        shutil.rmtree(job_dir, ignore_errors=True)
+        raise
+    options = {
+        "category": category, "precision": precision, "sample_rate": sample_rate,
+        "confidence": confidence, "rotation": rotation, "restrict_category": restrict_category,
+        "video_name": video.filename, "reference_name": reference.filename if reference else None,
+        "reference_kind": reference_kind,
+    }
+    job_id = reference_jobs.start(job_dir, video_path, reference_path, reference_kind, options)
+    return {"job_id": job_id, "status": "queued"}
+
+
+@app.get('/video/reference_search/{job_id}')
+def reference_search_status(job_id: str):
+    job = reference_jobs.get(job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Unknown or expired job.")
+    for match in job["matches"]:
+        match["thumbnail_url"] = f"/video/reference_search/{job_id}/frames/{match['index']}"
+    return job
+
+
+@app.get('/video/reference_search/{job_id}/frames/{index}')
+def reference_search_frame(job_id: str, index: int):
+    path = reference_jobs.frame_path(job_id, index)
+    if path is None:
+        raise HTTPException(status_code=404, detail="Frame not found.")
+    return FileResponse(str(path), media_type="image/jpeg")
+
+
+@app.delete('/video/reference_search/{job_id}')
+def cancel_reference_search(job_id: str):
+    if not reference_jobs.cancel(job_id):
+        raise HTTPException(status_code=404, detail="Unknown or expired job.")
+    return {"job_id": job_id, "status": "cancelling"}
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)

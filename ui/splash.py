@@ -35,7 +35,7 @@ def show_splash():
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.16), transparent 24%), #0B1230;
+            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.16), transparent 24%), #0B1228;
             overflow: hidden;
         }
         .splash-shell::before {
@@ -52,12 +52,22 @@ def show_splash():
             text-align: center;
             padding: 1rem 1.2rem 1.4rem;
         }
+        /* No frame: the logo's opaque navy background is blended into the
+           page ("lighten") and its outer edge is faded with a soft radial mask,
+           so no rectangle is visible. No box shadow / drop shadow on the image. */
         .splash-logo {
+            display: block;
+            margin: 0 auto;
             width: 320px;
             max-width: 78vw;
-            filter: drop-shadow(0 0 22px rgba(124, 58, 237, 0.36));
-            animation: logoFade 1.1s ease, logoPulse 2.3s ease-in-out infinite alternate;
-            border-radius: 28px;
+            height: auto;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            mix-blend-mode: lighten;
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 62%, transparent 72%);
+            mask-image: radial-gradient(ellipse at center, #000 62%, transparent 72%);
+            animation: logoFade 1.1s ease;
         }
         .splash-title {
             margin-top: 1.3rem;
