@@ -1,0 +1,44 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+*.iml
+
+# Android
+android/.gradle/
+android/.kotlin/
+android/local.properties
+android/app/build/
+
+# VS Code
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Environment & Logs
+.env
+*.log
+
+# OS
+.DS_Store
+*.cache
+
+# Models & Large Data
+weights/clip/ViT-B-32.pt
+weights/*.torchscript
+datasets/raw_downloads/
+datasets/custom_objects/images/
+runs/detect/
+*.db
+*_detected*.jpg
+
