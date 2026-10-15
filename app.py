@@ -1397,7 +1397,9 @@ elif page == "Video Fast Review":
     ref_is_person = False
 
     if search_type == "Object Category":
-      target_object = st.selectbox("Find object:", sorted(CLASS_NAMES.values()), index=0).lower()
+      sorted_classes = sorted(CLASS_NAMES.values())
+      default_idx = sorted_classes.index("person") if "person" in sorted_classes else 0
+      target_object = st.selectbox("Find object:", sorted_classes, index=default_idx).lower()
     else:
       ref_image_file = st.file_uploader("Upload Reference Image", type=["jpg", "png", "jpeg"])
       if ref_image_file is not None:
@@ -1501,95 +1503,113 @@ elif page == "Video Fast Review":
 
     precision_mode = st.radio(
       "Matching Precision",
-      ["Strict 100% Match (Zero False Positives)", "Balanced (Standard)", "Tolerant (High Recall)"],
-      index=0,
-      help="Strict mode guarantees only the exact target individual/object is matched."
+      ["Strict (High Precision)", "Balanced (Standard)", "Tolerant (High Recall)"],
+      index=1,
+      help="Balanced matches naturally across varying video lighting and angles."
     )
 
-    if precision_mode == "Strict 100% Match (Zero False Positives)":
-      max_face_dist = 0.48
-      min_obj_sim = 0.72
+    if precision_mode == "Strict (High Precision)":
+      max_face_dist = 0.49
+      min_obj_sim = 0.70
     elif precision_mode == "Balanced (Standard)":
-      max_face_dist = 0.52
-      min_obj_sim = 0.65
+      max_face_dist = 0.55
+      min_obj_sim = 0.62
     else:
-      max_face_dist = 0.58
-      min_obj_sim = 0.55
+      max_face_dist = 0.60
+      min_obj_sim = 0.52
 
-    sample_rate = st.slider("Frames per second to analyze", 1, 5, 1, help="Lower is faster but might miss very brief appearances.")
-    confidence = st.slider("Detection Confidence", 0.1, 1.0, 0.4, 0.05)
+    sample_rate = st.slider("Frames per second to analyze", 1, 5, 2, help="Higher FPS analyzes more moments; lower FPS processes faster.")
+    confidence = st.slider("Detection Confidence", 0.1, 1.0, 0.30, 0.05, help="Minimum threshold for YOLO object detector.")
     vfr_rot = st.selectbox("Video Orientation", ["0° (Original)", "90° Clockwise", "180° Inverted", "270° Counter-Clockwise"], index=0, key="vfr_rot_select", help="Rotate sideways or upside-down video frames.")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
   with col1:
     st.markdown("<div class='card-box'>", unsafe_allow_html=True)
-    video_file = st.file_uploader("Upload Video", type=["mp4", "avi", "mov", "mkv"])
+    video_file = st.file_uploader("Upload Video", type=["mp4", "avi", "mov", "mkv", "webm"])
 
     if video_file is not None:
+      # Video preview
+      st.video(video_file)
+
       import tempfile
       import math
       import os
-      ext = os.path.splitext(video_file.name)[1]
-      with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tfile:
-        video_file.seek(0)
-        tfile.write(video_file.read())
-        video_file.seek(0)
-        temp_path = tfile.name
+      
+      # Use a persistent temp path per uploaded video to prevent repeated writes
+      video_cache_key = f"vfr_video_{video_file.name}_{video_file.size}"
+      temp_path = st.session_state.get(video_cache_key)
+      if not temp_path or not os.path.exists(temp_path):
+        ext = os.path.splitext(video_file.name)[1] or ".mp4"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tfile:
+          video_file.seek(0)
+          tfile.write(video_file.read())
+          video_file.seek(0)
+          temp_path = tfile.name
+        st.session_state[video_cache_key] = temp_path
 
       can_start = True
       cached = st.session_state.get("vfr_ref")
       if search_type == "Reference Image" and (cached is None or (cached["face_enc"] is None and cached["embedding"] is None)):
-        st.warning("Please upload a reference image first.")
+        st.warning("Please upload a reference image on the right first.")
         can_start = False
 
-      if can_start and st.button("Start Fast Review", type="primary", width="stretch"):
-        st.markdown("### Search Results")
+      col_btn1, col_btn2 = st.columns([3, 1])
+      with col_btn1:
+        start_btn = st.button("🔍 Start Fast Review", type="primary", use_container_width=True, disabled=not can_start)
+      with col_btn2:
+        if st.session_state.get("vfr_results") is not None:
+          if st.button("Clear Results", use_container_width=True):
+            st.session_state["vfr_results"] = None
+            st.rerun()
+
+      if start_btn:
+        st.markdown("### Analyzing Video...")
         progress_bar = st.progress(0)
         status_text = st.empty()
-        results_container = st.container()
 
         cap = cv2.VideoCapture(temp_path)
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        if math.isnan(fps) or fps <= 0:
-          fps = 30.0
+        if not cap.isOpened():
+          st.error("Error: Could not open video file. Please ensure the video is in a standard format (H.264 MP4, WebM, or AVI).")
+        else:
+          fps = cap.get(cv2.CAP_PROP_FPS)
+          if math.isnan(fps) or fps <= 0:
+            fps = 30.0
 
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        if total_frames <= 0:
-          total_frames = 1
-        duration = total_frames / fps
+          total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+          if total_frames <= 0:
+            total_frames = 100
+          duration = total_frames / fps
 
-        frame_skip = int(fps / sample_rate)
-        if frame_skip < 1:
-          frame_skip = 1
+          frame_skip = max(1, int(fps / sample_rate))
 
-        found_timestamps = []
-        current_frame = 0
+          found_timestamps = []
+          current_frame = 0
+          start_time_proc = time.time()
 
-        # Retrieve cached reference data
-        ref_face_enc = cached.get("face_enc") if cached else None
-        ref_deep_emb = cached.get("embedding") if cached else None
-        ref_color_h = cached.get("hist") if cached else None
+          ref_face_enc = cached.get("face_enc") if cached else None
+          ref_deep_emb = cached.get("embedding") if cached else None
+          ref_color_h = cached.get("hist") if cached else None
 
-        while cap.isOpened():
-          ret, frame = cap.read()
-          if not ret:
-            break
+          while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+              break
 
-          if vfr_rot == "90° Clockwise":
-            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-          elif vfr_rot == "180° Inverted":
-            frame = cv2.rotate(frame, cv2.ROTATE_180)
-          elif vfr_rot == "270° Counter-Clockwise":
-            frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            if vfr_rot == "90° Clockwise":
+              frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            elif vfr_rot == "180° Inverted":
+              frame = cv2.rotate(frame, cv2.ROTATE_180)
+            elif vfr_rot == "270° Counter-Clockwise":
+              frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-          if current_frame % frame_skip == 0:
             timestamp_sec = current_frame / fps
-            status_text.text(f"Analyzing... {timestamp_sec:.1f}s / {duration:.1f}s")
-            progress_bar.progress(min(1.0, current_frame / total_frames))
+            status_text.text(f"Analyzing... {timestamp_sec:.1f}s / {duration:.1f}s (Frame {current_frame}/{total_frames})")
+            progress_bar.progress(min(1.0, current_frame / max(1, total_frames)))
 
             small_frame = cv2.resize(frame, (640, 480))
-            results = det_model.track(small_frame, persist=True, conf=confidence, verbose=False)
+            # Run detection directly (faster and cleaner than track on sampled frames)
+            results = det_model(small_frame, conf=confidence, verbose=False)
 
             matched_boxes_in_frame = []
 
@@ -1606,7 +1626,6 @@ elif page == "Video Fast Review":
                       match_sim = 0.0
 
                       if ref_face_enc is not None and obj_name == "person":
-                        # Target is a specific individual: strict face recognition
                         try:
                           import face_recognition
                           orig_h, orig_w = frame.shape[:2]
@@ -1620,18 +1639,17 @@ elif page == "Video Fast Review":
 
                           if person_orig.size > 0 and person_orig.shape[0] > 15 and person_orig.shape[1] > 15:
                             p_rgb = cv2.cvtColor(person_orig, cv2.COLOR_BGR2RGB)
-                            upper_body = p_rgb[0 : max(25, int(p_rgb.shape[0] * 0.65)), :]
+                            upper_body = p_rgb[0 : max(25, int(p_rgb.shape[0] * 0.70)), :]
                             face_locs = face_recognition.face_locations(upper_body)
                             if not face_locs:
                               face_locs = face_recognition.face_locations(p_rgb)
-                            if not face_locs and person_orig.shape[0] < 180:
+                            if not face_locs and person_orig.shape[0] < 200:
                               face_locs = face_recognition.face_locations(p_rgb, number_of_times_to_upsample=1)
 
                             if face_locs:
                               face_encs = face_recognition.face_encodings(p_rgb, face_locs)
                               for f_loc, enc in zip(face_locs, face_encs):
                                 dist = float(face_recognition.face_distance([ref_face_enc], enc)[0])
-                                # Distance <= 0.50 indicates exact same individual
                                 if dist <= max_face_dist:
                                   is_match = True
                                   match_sim = max(0.0, 1.0 - dist)
@@ -1652,7 +1670,6 @@ elif page == "Video Fast Review":
                         except Exception:
                           pass
                       else:
-                        # Target is a specific object: deep semantic + color distribution matching
                         roi = small_frame[max(0, y1):max(0, y2), max(0, x1):max(0, x2)]
                         if roi.size > 0 and roi.shape[0] >= 10 and roi.shape[1] >= 10 and ref_deep_emb is not None:
                           roi_emb = get_image_embedding(roi)
@@ -1666,8 +1683,7 @@ elif page == "Video Fast Review":
                               color_sim = max(0.0, float(cv2.compareHist(ref_color_h, roi_hist, cv2.HISTCMP_CORREL)))
 
                           sim = 0.55 * deep_sim + 0.45 * color_sim
-                          # Strict threshold for objects: require strong color and deep feature correlation
-                          if sim >= min_obj_sim and color_sim >= 0.50:
+                          if sim >= min_obj_sim and color_sim >= 0.45:
                             is_match = True
                             match_sim = sim
                             matched_boxes_in_frame.append({
@@ -1678,63 +1694,121 @@ elif page == "Video Fast Review":
                     else:
                       matched_boxes_in_frame.append({
                         "box": (x1, y1, x2, y2),
-                        "label": obj_name.title(),
+                        "label": f"{obj_name.title()} ({float(box.conf[0]) * 100:.0f}%)",
                         "sim": float(box.conf[0])
                       })
-                      break
-              if matched_boxes_in_frame and search_type != "Reference Image":
-                break
 
             if len(matched_boxes_in_frame) > 0:
-              # For target person: resolve crowd overlap and keep only the true target individual
               if ref_face_enc is not None:
                 matched_boxes_in_frame.sort(key=lambda m: (m.get("offset_norm", 0), m.get("area", 0)))
-                matched_boxes_in_frame = [matched_boxes_in_frame[0]]
               else:
                 matched_boxes_in_frame.sort(key=lambda m: m["sim"], reverse=True)
-                matched_boxes_in_frame = [matched_boxes_in_frame[0]]
 
               best_match = matched_boxes_in_frame[0]
 
-              # Draw bounding box ONLY for the matching object
+              # Draw bounding boxes for matched objects
+              annotated_frame = small_frame.copy()
               for match in matched_boxes_in_frame:
                 bx1, by1, bx2, by2 = match["box"]
                 lbl = match["label"]
-                cv2.rectangle(small_frame, (bx1, by1), (bx2, by2), (0, 255, 0), 2)
-                cv2.putText(small_frame, lbl, (bx1, max(by1 - 10, 0)), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+                cv2.rectangle(annotated_frame, (bx1, by1), (bx2, by2), (56, 189, 248), 2)
+                # Background text pill
+                t_size = cv2.getTextSize(lbl, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)[0]
+                cv2.rectangle(annotated_frame, (bx1, max(0, by1 - 22)), (bx1 + t_size[0] + 6, max(0, by1)), (11, 18, 40), -1)
+                cv2.putText(annotated_frame, lbl, (bx1 + 3, max(14, by1 - 6)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (56, 189, 248), 1, cv2.LINE_AA)
 
               formatted_time = time.strftime('%M:%S', time.gmtime(timestamp_sec))
-              if not found_timestamps or (timestamp_sec - found_timestamps[-1]['seconds']) > 2.0:
-                match_info = formatted_time
+              # Avoid duplicate timestamps within 1.5 seconds
+              if not found_timestamps or (timestamp_sec - found_timestamps[-1]['seconds']) > 1.5:
+                match_info = f"{formatted_time} ({timestamp_sec:.1f}s)"
                 if search_type == "Reference Image":
-                  match_info += f" (Match: {best_match['sim'] * 100:.0f}%)"
+                  match_info += f" — Match: {best_match['sim'] * 100:.0f}%"
+                else:
+                  match_info += f" — {best_match['label']}"
 
                 found_timestamps.append({
                   "time_str": match_info,
-                  "seconds": timestamp_sec,
-                  "frame_img": cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
+                  "seconds": round(timestamp_sec, 2),
+                  "label": best_match['label'],
+                  "frame_img": cv2.cvtColor(annotated_frame, cv2.COLOR_BGR2RGB)
                 })
-          current_frame += 1
-        
-        cap.release()
-        progress_bar.progress(1.0)
-        
-        search_lbl = "custom image" if search_type == "Reference Image" else target_object
-        status_text.text(f"Analysis Complete! Found {search_lbl} {len(found_timestamps)} times.")
-        
-        if found_timestamps:
-          for item in found_timestamps:
-            with results_container:
-              st.markdown(f"**Found at {item['time_str']}**")
-              st.image(item['frame_img'], width=300)
+
+            # Fast frame skipping via cap.grab()
+            if frame_skip > 1:
+              for _ in range(frame_skip - 1):
+                if not cap.grab():
+                  break
+                current_frame += 1
+
+            current_frame += 1
+
+          cap.release()
+          progress_bar.progress(1.0)
+          elapsed = round(time.time() - start_time_proc, 1)
+
+          search_lbl = "Target Reference" if search_type == "Reference Image" else target_object.title()
+          status_text.text(f"Analysis Complete! Found {search_lbl} {len(found_timestamps)} times in {elapsed}s.")
+
+          # Save in session state for persistence
+          st.session_state["vfr_results"] = {
+            "search_lbl": search_lbl,
+            "target": target_object,
+            "found_timestamps": found_timestamps,
+            "duration": duration,
+            "total_frames": total_frames,
+            "elapsed": elapsed
+          }
+
+      # Display persistent results if available
+      vfr_res = st.session_state.get("vfr_results")
+      if vfr_res:
+        matches = vfr_res.get("found_timestamps", [])
+        st.markdown("---")
+        st.markdown(f"### 📋 Review Results: **{vfr_res['search_lbl']}**")
+
+        # Summary Metrics
+        mcol1, mcol2, mcol3, mcol4 = st.columns(4)
+        mcol1.metric("Video Length", f"{vfr_res['duration']:.1f}s")
+        mcol2.metric("Scan Time", f"{vfr_res['elapsed']}s")
+        mcol3.metric("Appearances", f"{len(matches)}")
+        presence_pct = (len(matches) * 1.5 / max(1.0, vfr_res['duration'])) * 100
+        mcol4.metric("Presence %", f"{min(100.0, presence_pct):.0f}%")
+
+        if matches:
+          st.success(f"Successfully identified {len(matches)} occurrences of **{vfr_res['search_lbl']}**.")
+          
+          # Timeline Badges
+          timeline_badges = " ".join([f"`⏱ {m['time_str'].split(' ')[0]}`" for m in matches[:10]])
+          if len(matches) > 10:
+            timeline_badges += f" *+{len(matches)-10} more*"
+          st.markdown(f"**Timeline:** {timeline_badges}")
+
+          st.markdown("#### Matched Moments")
+          # Show matched frames in a responsive 2-column grid
+          grid_cols = st.columns(2)
+          for idx, item in enumerate(matches):
+            with grid_cols[idx % 2]:
+              st.markdown(f"**Timestamp: {item['time_str']}**")
+              st.image(item['frame_img'], use_container_width=True)
               st.markdown("---")
+
+          # Export results option
+          export_data = {
+            "target": vfr_res["search_lbl"],
+            "video_duration_seconds": vfr_res["duration"],
+            "matches_count": len(matches),
+            "timeline": [{"timestamp": m["time_str"], "seconds": m["seconds"], "label": m["label"]} for m in matches]
+          }
+          st.download_button(
+            "📥 Download Review Timeline (JSON)",
+            data=json.dumps(export_data, indent=2),
+            file_name=f"fast_video_review_{vfr_res['target'] or 'search'}.json",
+            mime="application/json",
+            use_container_width=True
+          )
         else:
-          results_container.warning(f"Could not find a match for {search_lbl} in the video.")
-        
-        try:
-          os.unlink(temp_path)
-        except:
-          pass
+          st.warning(f"Could not find any matching appearances of **{vfr_res['search_lbl']}** in this video. Tip: Try adjusting the detection confidence or setting precision to 'Tolerant'.")
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 

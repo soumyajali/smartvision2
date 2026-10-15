@@ -1,33 +1,59 @@
 {
-  "title": "Meet the Builders",
-  "subtitle": "The team behind Smart Vision",
+  "title": "Builders' Profile",
+  "subtitle": "The team behind Smart Vision AI",
   "builders": [
     {
       "id": "builder-1",
-      "placeholder": true,
-      "photo": "",
-      "name": "",
-      "mobile": "",
-      "show_mobile": false,
-      "about": ""
+      "placeholder": false,
+      "photo": "sowmya.jpg",
+      "name": "Ms. Sowmya B. Jaali",
+      "usn": "4AL24CS409",
+      "email": "www.soumya118@gmail.com",
+      "mobile": "+91 7892665324",
+      "show_mobile": true,
+      "role": "student"
     },
     {
       "id": "builder-2",
-      "placeholder": true,
-      "photo": "",
-      "name": "",
-      "mobile": "",
-      "show_mobile": false,
-      "about": ""
+      "placeholder": false,
+      "photo": "nivedita.jpg",
+      "name": "Ms. Nivedita R. Kagale",
+      "usn": "4AL23CS100",
+      "email": "nivedita2k23@gmail.com",
+      "mobile": "+91 9686279911",
+      "show_mobile": true,
+      "role": "student"
     },
     {
       "id": "builder-3",
-      "placeholder": true,
-      "photo": "",
-      "name": "",
-      "mobile": "",
-      "show_mobile": false,
-      "about": ""
+      "placeholder": false,
+      "photo": "ruchita.jpg",
+      "name": "Ms. Ruchita M. Patgar",
+      "usn": "4AL23CS127",
+      "email": "ruchitapatgar41@gmail.com",
+      "mobile": "+91 9019951028",
+      "show_mobile": true,
+      "role": "student"
+    },
+    {
+      "id": "builder-4",
+      "placeholder": false,
+      "photo": "mythri.jpg",
+      "name": "Ms. Mythri N",
+      "usn": "4AL23CS088",
+      "email": "mythrincse@gmail.com",
+      "mobile": "+91 8660654522",
+      "show_mobile": true,
+      "role": "student"
+    },
+    {
+      "id": "guide-1",
+      "placeholder": false,
+      "photo": "anitha.jpg",
+      "name": "Prof. Anitha Rao",
+      "designation": "Assistant Professor",
+      "email": "anitharao@aiet.org.in",
+      "role": "guide"
     }
   ]
 }

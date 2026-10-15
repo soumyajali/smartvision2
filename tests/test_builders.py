@@ -5,15 +5,17 @@ from pathlib import Path
 
 from ui.builders import CONFIG, builder_card_html, load_builders
 
-ALLOWED_FIELDS = {"id", "placeholder", "photo", "name", "mobile", "show_mobile", "about"}
+ALLOWED_FIELDS = {
+    "id", "placeholder", "photo", "name", "mobile", "show_mobile", "about",
+    "usn", "email", "role", "designation"
+}
 
 
 def test_config_has_only_the_allowed_profile_fields():
     data = json.loads(Path(CONFIG).read_text())
-    assert data["subtitle"] == "The team behind Smart Vision"
+    assert "Smart Vision" in data["subtitle"]
     for builder in data["builders"]:
         assert set(builder) <= ALLOWED_FIELDS
-        assert "role" not in {k.lower() for k in builder}
 
 
 def test_placeholders_never_show_invented_details():

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Vision — Builders' Profile</title>
+  <meta name="description" content="Meet the builders behind the Smart Vision AI — Intelligent Multi-Class Object Recognition System.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f6f8;
+      color: #1a1f36;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Page Container ────────────────────────────────────── */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 28px 56px;
+    }
+
+    /* ── Page Header ───────────────────────────────────────── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .page-header__eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6366f1;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .page-header__title {
+      font-family: 'Playfair Display', 'Georgia', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .page-header__divider {
+      width: 64px;
+      height: 3px;
+      background: linear-gradient(90deg, #6366f1, #818cf8);
+      border: none;
+      border-radius: 2px;
+      margin: 0 auto;
+    }
+
+    /* ── Grid — Students ───────────────────────────────────── */
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 44px;
+    }
+
+    @media (max-width: 720px) {
+      .students-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+    }
+
+    /* ── Profile Card ──────────────────────────────────────── */
+    .profile-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 28px 22px 24px;
+      text-align: center;
+      box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.04),
+        0 6px 24px rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+
+    .profile-card:hover {
+      box-shadow:
+        0 2px 6px rgba(15, 23, 42, 0.06),
+        0 12px 40px rgba(99, 102, 241, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* ── Circular Photo ────────────────────────────────────── */
+    .profile-card__photo-wrapper {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+
+    .profile-card__photo-ring {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(145deg, #e0e7ff, #c7d2fe, #a5b4fc);
+      box-shadow:
+        0 3px 10px rgba(99, 102, 241, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-card__photo {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 2px solid #ffffff;
+      display: block;
+    }
+
+    /* ── Name ──────────────────────────────────────────────── */
+    .profile-card__name {
+      font-family: 'Playfair Display', 'Georgia', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+
+    /* ── Details List ──────────────────────────────────────── */
+    .profile-card__details {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .profile-card__detail {
+      font-size: 0.8rem;
+      color: #334155;
+      padding: 4px 0;
+      border-bottom: 1px solid #f1f5f9;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .profile-card__detail:last-child {
+      border-bottom: none;
+    }
+
+    .profile-card__label {
+      font-weight: 600;
+      color: #1e293b;
+      margin-right: 4px;
+    }
+
+    .profile-card__value {
+      font-weight: 400;
+      color: #475569;
+    }
+
+    .profile-card__value a {
+      color: #6366f1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .profile-card__value a:hover {
+      color: #4338ca;
+      text-decoration: underline;
+    }
+
+    /* ── Faculty Guide Section ─────────────────────────────── */
+    .guidance-section {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .guidance-section__heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .guidance-section__title {
+      font-family: 'Playfair Display', 'Georgia', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .guidance-section__divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, #6366f1, #818cf8);
+      border: none;
+      border-radius: 2px;
+      margin: 0 auto 28px;
+    }
+
+    .guidance-section__card-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .profile-card--faculty {
+      max-width: 340px;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid rgba(99, 102, 241, 0.12);
+      box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.04),
+        0 8px 32px rgba(99, 102, 241, 0.08);
+    }
+
+    .profile-card--faculty .profile-card__photo-ring {
+      background: linear-gradient(145deg, #c7d2fe, #a5b4fc, #818cf8);
+      box-shadow:
+        0 6px 20px rgba(99, 102, 241, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-card--faculty .profile-card__name {
+      font-size: 1.15rem;
+    }
+
+    /* ── Faculty Placeholder Avatar ────────────────────────── */
+    .profile-card__photo-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    }
+
+    .profile-card__photo-placeholder svg {
+      width: 48px;
+      height: 48px;
+      color: #818cf8;
+    }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    .page-footer {
+      text-align: center;
+      margin-top: 72px;
+      padding-top: 28px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .page-footer__text {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .page-footer__project {
+      font-weight: 600;
+      color: #6366f1;
+    }
+
+    /* ── Print Styles ──────────────────────────────────────── */
+    @media print {
+      body {
+        background: #ffffff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page-container {
+        padding: 24px 16px;
+        max-width: 100%;
+      }
+
+      .profile-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+      }
+
+      .profile-card:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .students-grid {
+        gap: 24px;
+      }
+
+      .profile-card--faculty {
+        box-shadow: none;
+        border: 1px solid #c7d2fe;
+      }
+    }
+
+    /* ── Subtle Entrance Animation ─────────────────────────── */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .profile-card {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .students-grid .profile-card:nth-child(1) { animation-delay: 0.1s; }
+    .students-grid .profile-card:nth-child(2) { animation-delay: 0.2s; }
+    .students-grid .profile-card:nth-child(3) { animation-delay: 0.3s; }
+    .students-grid .profile-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .profile-card--faculty {
+      animation-delay: 0.5s;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="page-container" role="main">
+
+    <!-- ─── Page Header ────────────────────────────────── -->
+    <header class="page-header">
+      <span class="page-header__eyebrow">Smart Vision AI</span>
+      <h1 class="page-header__title">Builders' Profile</h1>
+      <hr class="page-header__divider">
+    </header>
+
+    <!-- ─── Student Profiles Grid ──────────────────────── -->
+    <section class="students-grid" aria-label="Student Builders">
+
+      <!-- 1 ── Sowmya B. Jaali ─────────────────────────── -->
+      <article class="profile-card" id="profile-sowmya">
+        <div class="profile-card__photo-wrapper">
+          <div class="profile-card__photo-ring">
+            <img
+              class="profile-card__photo"
+              src="assets/builders/photos/sowmya.jpg"
+              alt="Photograph of Ms. Sowmya B. Jaali"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <h2 class="profile-card__name">Ms. Sowmya B. Jaali</h2>
+        <ul class="profile-card__details">
+          <li class="profile-card__detail">
+            <span class="profile-card__label">USN:</span>
+            <span class="profile-card__value">4AL24CS409</span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Email ID:</span>
+            <span class="profile-card__value">
+              <a href="mailto:www.soumya118@gmail.com">www.soumya118@gmail.com</a>
+            </span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Contact No:</span>
+            <span class="profile-card__value">+91 7892665324</span>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 2 ── Nivedita R. Kagale ──────────────────────── -->
+      <article class="profile-card" id="profile-nivedita">
+        <div class="profile-card__photo-wrapper">
+          <div class="profile-card__photo-ring">
+            <img
+              class="profile-card__photo"
+              src="assets/builders/photos/nivedita.jpg"
+              alt="Photograph of Ms. Nivedita R. Kagale"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <h2 class="profile-card__name">Ms. Nivedita R. Kagale</h2>
+        <ul class="profile-card__details">
+          <li class="profile-card__detail">
+            <span class="profile-card__label">USN:</span>
+            <span class="profile-card__value">4AL23CS100</span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Email ID:</span>
+            <span class="profile-card__value">
+              <a href="mailto:nivedita2k23@gmail.com">nivedita2k23@gmail.com</a>
+            </span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Contact No:</span>
+            <span class="profile-card__value">+91 9686279911</span>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 3 ── Ruchita M. Patgar ──────────────────────── -->
+      <article class="profile-card" id="profile-ruchita">
+        <div class="profile-card__photo-wrapper">
+          <div class="profile-card__photo-ring">
+            <img
+              class="profile-card__photo"
+              src="assets/builders/photos/ruchita.jpg"
+              alt="Photograph of Ms. Ruchita M. Patgar"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <h2 class="profile-card__name">Ms. Ruchita M. Patgar</h2>
+        <ul class="profile-card__details">
+          <li class="profile-card__detail">
+            <span class="profile-card__label">USN:</span>
+            <span class="profile-card__value">4AL23CS127</span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Email ID:</span>
+            <span class="profile-card__value">
+              <a href="mailto:ruchitapatgar41@gmail.com">ruchitapatgar41@gmail.com</a>
+            </span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Contact No:</span>
+            <span class="profile-card__value">+91 9019951028</span>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 4 ── Mythri N ───────────────────────────────── -->
+      <article class="profile-card" id="profile-mythri">
+        <div class="profile-card__photo-wrapper">
+          <div class="profile-card__photo-ring">
+            <img
+              class="profile-card__photo"
+              src="assets/builders/photos/mythri.jpg"
+              alt="Photograph of Ms. Mythri N"
+              loading="lazy"
+            >
+          </div>
+        </div>
+        <h2 class="profile-card__name">Ms. Mythri N</h2>
+        <ul class="profile-card__details">
+          <li class="profile-card__detail">
+            <span class="profile-card__label">USN:</span>
+            <span class="profile-card__value">4AL23CS088</span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Email ID:</span>
+            <span class="profile-card__value">
+              <a href="mailto:mythrincse@gmail.com">mythrincse@gmail.com</a>
+            </span>
+          </li>
+          <li class="profile-card__detail">
+            <span class="profile-card__label">Contact No:</span>
+            <span class="profile-card__value">+91 8660654522</span>
+          </li>
+        </ul>
+      </article>
+
+    </section>
+
+    <!-- ─── Faculty Guide Section ──────────────────────── -->
+    <section class="guidance-section" aria-label="Faculty Guide">
+      <span class="guidance-section__heading">Faculty Guide</span>
+      <h2 class="guidance-section__title">Under the Guidance of</h2>
+      <hr class="guidance-section__divider">
+
+      <div class="guidance-section__card-wrapper">
+        <article class="profile-card profile-card--faculty" id="profile-anitha-rao">
+          <div class="profile-card__photo-wrapper">
+              <img class="profile-card__photo" src="assets/builders/photos/anitha.jpg" alt="Photograph of Prof. Anitha Rao" loading="lazy">
+            </div>
+          </div>
+          <h2 class="profile-card__name">Prof. Anitha Rao</h2>
+          <ul class="profile-card__details">
+            <li class="profile-card__detail">
+              <span class="profile-card__label">Designation:</span>
+              <span class="profile-card__value">Assistant Professor</span>
+            </li>
+            <li class="profile-card__detail">
+              <span class="profile-card__label">Email:</span>
+              <span class="profile-card__value">
+                <a href="mailto:anitharao@aiet.org.in">anitharao@aiet.org.in</a>
+              </span>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── Footer ─────────────────────────────────────── -->
+    <footer class="page-footer">
+      <p class="page-footer__text">
+        <span class="page-footer__project">Smart Vision AI</span> — Intelligent Multi-Class Object Recognition System
+      </p>
+    </footer>
+
+  </main>
+
+</body>
+</html>
